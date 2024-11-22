@@ -1,0 +1,320 @@
+body{
+  font-size: 14px;
+}
+
+.codemate-ai-dark-theme {
+  --bgColor: #00000000;
+  --bgGradientStart: #1a1a1a;
+  --bgGradientEnd: #000000;
+  --textColor: #e0e0e0;
+  --primaryTextColor: #ffffff;
+  --secondaryTextColor: #a0a0a0;
+  --cursorColor: #00ffff;
+  --selectionBackgroundColor: rgba(0, 255, 255, 0.2);
+  --commentColor: #6a737d;
+  --redColor: #ff5555;
+  --redColorGradientStart: #fb625929;
+  --redColorGradientEnd: #ff5555;
+  --darkRedColor: #cc0000;
+  --orangeColor: #ff9900;
+  --yellowColor: #ffff00;
+  --greenColor: #50fa7b;
+  --greenColorGradientStart: #75e9931a;
+  --greenColorGradientEnd: #50fa7b;
+  --darkGreenColor: #00cc66;
+  --darkGreenColorGradientStart: #00e673;
+  --darkGreenColorGradientEnd: #00cc66;
+  --cyanColor: #00ffff;
+  --blueColor: #00bfff;
+  --blueColorGradientStart: #33ccff;
+  --blueColorGradientEnd: #00bfff;
+  --darkBlueColor: #0066cc;
+  --darkBlueColorGradientStart: #0080ff;
+  --darkBlueColorGradientEnd: #0066cc;
+  --purpleColor: #bd93f9;
+  --borderColor: #333333;
+  --commandColor: #50fa7b;
+  --linkColor: #00bfff;
+  --scrollbarThumbColor: #c1c1c11a;
+  --scrollbarTrackColor: #1a1a1a;
+  --tabActiveColor: #00bfff;
+  --tabInactiveColor: #4d4d4d;
+  --iconColor: #a0a0a0;
+  --promptColor: #bd93f9;
+  --promptColorGradientStart: #d3b3fc;
+  --promptColorGradientEnd: #bd93f9;
+  --grayColor: #808080;
+  --lightGrayColor: #a0a0a0;
+  --darkGrayColor: #4d4d4d;
+  --shadowColor: rgba(0, 0, 0, 0.5);
+  --shadowColorLight: rgba(0, 0, 0, 0.3);
+}
+.modern-terminal-theme {
+  --bgColor: #011627;
+  --bgGradientStart: #012a4a;
+  --bgGradientEnd: #011627;
+  --textColor: #e0e0e0;
+  --primaryTextColor: #ffffff;
+  --secondaryTextColor: #607b96;
+  --cursorColor: #00ffff;
+  --selectionBackgroundColor: rgba(0, 255, 255, 0.2);
+  --commentColor: #4b6178;
+  --redColor: #ff5f56;
+  --redColorGradientStart: #ff7b7291;
+  --redColorGradientEnd: #ff5f56;
+  --darkRedColor: #be5046;
+  --orangeColor: #ff9d00;
+  --yellowColor: #ffbd2e;
+  --greenColor: #27c93f;
+  --greenColorGradientStart: #3edc6278;
+  --greenColorGradientEnd: #27c93f;
+  --darkGreenColor: #22a736;
+  --darkGreenColorGradientStart: #2abe3f;
+  --darkGreenColorGradientEnd: #22a736;
+  --cyanColor: #00ffff;
+  --blueColor: #2f97ff;
+  --blueColorGradientStart: #59a9ff;
+  --blueColorGradientEnd: #2f97ff;
+  --darkBlueColor: #0366d6;
+  --darkBlueColorGradientStart: #0480ff;
+  --darkBlueColorGradientEnd: #0366d6;
+  --purpleColor: #c592ff;
+  --borderColor: #1e2d3d;
+  --commandColor: #00ff9c;
+  --linkColor: #00ffff;
+  --scrollbarThumbColor: #607b96;
+  --scrollbarTrackColor: #011627;
+  --tabActiveColor: #00ffff;
+  --tabInactiveColor: #607b96;
+  --iconColor: #607b96;
+  --promptColor: #c592ff;
+  --promptColorGradientStart: #c592ff;
+  --promptColorGradientEnd: #e0b3ff;
+  --grayColor: #607b96;
+  --lightGrayColor: #8b9eb0;
+  --darkGrayColor: #3b4b5b;
+  --shadowColor: rgba(1, 22, 39, 0.5);
+  --shadowColorLight: rgba(1, 22, 39, 0.3);
+}
+.codemate-ai-light-theme {
+  --bgColor: #f5f5f5;
+  --bgGradientStart: #ffffff;
+  --bgGradientEnd: #f0f0f0;
+  --textColor: #4d4d4c;
+  --primaryTextColor: #333333;
+  --secondaryTextColor: #555555;
+  --cursorColor: #aeafad;
+  --selectionBackgroundColor: #d6d6d6;
+  --commentColor: #8e908c;
+  --redColor: #c82829;
+  --redColorGradientStart: #ff7b72;
+  --redColorGradientEnd: #c82829;
+  --darkRedColor: #a52a2a;
+  --orangeColor: #f5871f;
+  --orangeColorGradientStart: #ffa53e;
+  --orangeColorGradientEnd: #f5871f;
+  --yellowColor: #eab700;
+  --yellowColorGradientStart: #ffd11a;
+  --yellowColorGradientEnd: #eab700;
+  --greenColor: #718c00;
+  --greenColorGradientStart: #72fb954a;
+  --greenColorGradientEnd: #718c00;
+  --darkGreenColor: #4a6600;
+  --darkGreenColorGradientStart: #5c8000;
+  --darkGreenColorGradientEnd: #4a6600;
+  --cyanColor: #3e999f;
+  --cyanColorGradientStart: #4cb6bd;
+  --cyanColorGradientEnd: #3e999f;
+  --blueColor: #4271ae;
+  --blueColorGradientStart: #5189cc;
+  --blueColorGradientEnd: #4271ae;
+  --darkBlueColor: #5bbae9;
+  --darkBlueColorGradientStart: #79c7ed;
+  --darkBlueColorGradientEnd: #5bbae9;
+  --purpleColor: #8959a8;
+  --purpleColorGradientStart: #a56ec5;
+  --purpleColorGradientEnd: #8959a8;
+  --borderColor: #d6d6d6;
+  --commandColor: #4a6600;
+  --linkColor: #4271ae;
+  --scrollbarThumbColor: #c1c1c1;
+  --scrollbarTrackColor: #f0f0f0;
+  --tabActiveColor: #4271ae;
+  --tabInactiveColor: #a2a2a2;
+  --iconColor: #555555;
+  --promptColor: #8959a8;
+  --promptColorGradientStart: #a56ec5;
+  --promptColorGradientEnd: #8959a8;
+  --grayColor: #a2a2a2;
+  --lightGrayColor: #4d4d4c;
+  --darkGrayColor: #888888;
+  --shadowColor: rgba(0, 0, 0, 0.1);
+  --shadowColorLight: rgba(0, 0, 0, 0.05);
+}
+
+.dracula-theme {
+  --bgColor: #282a36;
+  --bgGradientStart: #44475a;
+  --bgGradientEnd: #282a36;
+  --textColor: #f8f8f2;
+  --primaryTextColor: #ffffff;
+  --secondaryTextColor: #6272a4;
+  --cursorColor: #50fa7b;
+  --selectionBackgroundColor: #44475a;
+  --commentColor: #6272a4;
+  --redColor: #ff5555;
+  --redColorGradientStart: #ff7b72;
+  --redColorGradientEnd: #ff5555;
+  --darkRedColor: #a52a2a;
+  --orangeColor: #ffb86c;
+  --orangeColorGradientStart: #ffa53e;
+  --orangeColorGradientEnd: #f5871f;
+  --yellowColor: #f1fa8c;
+  --yellowColorGradientStart: #ffd11a;
+  --yellowColorGradientEnd: #eab700;
+  --greenColor: #50fa7b;
+  --greenColorGradientStart: #72fb954a;
+  --greenColorGradientEnd: #50fa7b;
+  --darkGreenColor: #4a6600;
+  --darkGreenColorGradientStart: #5c8000;
+  --darkGreenColorGradientEnd: #4a6600;
+  --cyanColorGradientStart: #4cb6bd;
+  --cyanColorGradientEnd: #3e999f;
+  --blueColor: #4271ae;
+  --blueColorGradientStart: #5189cc;
+  --blueColorGradientEnd: #4271ae;
+  --darkBlueColor: #5bbae9;
+  --darkBlueColorGradientStart: #79c7ed;
+  --darkBlueColorGradientEnd: #5bbae9;
+  --purpleColor: #bd93f9;
+  --purpleColorGradientStart: #a56ec5;
+  --purpleColorGradientEnd: #8959a8;
+  --cyanColor: #8be9fd;
+  --pinkColor: #ff79c6;
+  --promptColor: #8959a8;
+  --tabActiveColor: #4271ae;
+  --commandColor: #4a6600;
+  --linkColor: #4271ae;
+  --scrollbarThumbColor: #c1c1c1;
+  --scrollbarTrackColor: #f0f0f0;
+  --tabInactiveColor: #a2a2a2;
+  --iconColor: #555555;
+  --promptColorGradientStart: #a56ec5;
+  --promptColorGradientEnd: #8959a8;
+  --borderColor: #44475a;
+  --grayColor: #666666;
+  --lightGrayColor: #999999;
+  --darkGrayColor: #444444;
+  --shadowColor: rgba(0, 0, 0, 0.3);
+  --shadowColorLight: rgba(0, 0, 0, 0.1);
+}
+
+.gruvbox-dark-theme {
+  --bgColor: #282828;
+  --bgGradientStart: #3c3836;
+  --bgGradientEnd: #282828;
+  --textColor: #ebdbb2;
+  --primaryTextColor: #fbf1c7;
+  --secondaryTextColor: #a89984;
+  --cursorColor: #fe8019;
+  --selectionBackgroundColor: #3c3836;
+  --commentColor: #928374;
+  --redColor: #fb4934;
+  --redColorGradientStart: #ff7b72;
+  --redColorGradientEnd: #fb4934;
+  --darkRedColor: #a52a2a;
+  --orangeColor: #fe8019;
+  --orangeColorGradientStart: #ffa53e;
+  --orangeColorGradientEnd: #f5871f;
+  --yellowColor: #fabd2f;
+  --yellowColorGradientStart: #ffd11a;
+  --yellowColorGradientEnd: #eab700;
+  --greenColor: #b8bb26;
+  --greenColorGradientStart: #72fb954a;
+  --greenColorGradientEnd: #b8bb26;
+  --darkGreenColor: #4a6600;
+  --darkGreenColorGradientStart: #5c8000;
+  --darkGreenColorGradientEnd: #4a6600;
+  --cyanColor: #8ec07c;
+  --cyanColorGradientStart: #4cb6bd;
+  --cyanColorGradientEnd: #3e999f;
+  --blueColor: #83a598;
+  --blueColorGradientStart: #9dbab3;
+  --blueColorGradientEnd: #83a598;
+  --darkBlueColor: #5bbae9;
+  --darkBlueColorGradientStart: #79c7ed;
+  --darkBlueColorGradientEnd: #5bbae9;
+  --purpleColor: #d3869b;
+  --purpleColorGradientStart: #d3869b;
+  --purpleColorGradientEnd: #e8788e;
+  --promptColor: #8959a8;
+  --promptColorGradientStart: #a56ec5;
+  --promptColorGradientEnd: #8959a8;
+  --tabActiveColor: #4271ae;
+  --borderColor: #3c3836;
+  --commandColor: #4a6600;
+  --linkColor: #4271ae;
+  --scrollbarThumbColor: #c1c1c1;
+  --scrollbarTrackColor: #f0f0f0;
+  --tabInactiveColor: #a2a2a2;
+  --iconColor: #555555;
+  --grayColor: #7c6f64;
+  --lightGrayColor: #a89984;
+  --darkGrayColor: #504945;
+  --shadowColor: rgba(0, 0, 0, 0.3);
+  --shadowColorLight: rgba(0, 0, 0, 0.1);
+}
+
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Custom border gradient */
+.border-gradient {
+  border-image: linear-gradient(to right, #6ee7b7, #a4c2f0, #f3a8c3) 1;
+}
+
+/* Transition effect for sliders */
+.slider-transition {
+  transition: transform 0.3s ease-in-out;
+}
+
+.custom-flex-grow-for-message-container {
+  flex: 1 1;
+  display: flex;
+  position: relative;
+}
+
+#ace-editor {
+  height: 100%;
+}
+
+.ace_editor {
+  height: 100%;
+}
+
+
+
+.gradient-border {
+  border-image: linear-gradient(to left, var(--darkBlueColorGradientStart), var(--purpleColor)) 1;
+}
+
+
+
+select#theme-select {
+  background-color: var(--bgGradientEnd);
+}
+
+#model{
+  background-color: var(--bgGradientEnd);
+}
+
+.custom-font-size{
+  font-size: 14px;
+}

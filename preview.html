@@ -1,0 +1,424 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' https://cdn.jsdelivr.net;">
+    <title>Code Preview</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .preview-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .preview-header {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+        }
+        .preview-content {
+            padding: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="preview-root"></div>
+    <script>
+        function transformImports(code) {
+            const importReactRegex = /import\s+(?:(\w+)\s*,?\s*)?(?:{([^}]+)})?\s+from\s+['"]react['"];?/g;
+            const importCssRegex = /import\s+['"]([^'"]+\.css)['"];?/g;
+            const importReactDOMRegex = /import\s+\w+\s+from\s+['"]react-dom['"];?/g;
+            const reactDomRenderRegex = /ReactDOM\.render\s*$$.+$$;?/g;
+
+            let transformedCode = code;
+            let match;
+            let defaultImport = '';
+            const namedImports = new Set();
+
+            while ((match = importReactRegex.exec(code)) !== null) {
+                if (match[1]) {
+                    defaultImport = match[1].trim();
+                }
+                if (match[2]) {
+                    match[2].split(',').forEach((imp) => namedImports.add(imp.trim()));
+                }
+            }
+
+            transformedCode = transformedCode.replace(importReactRegex, '');
+            transformedCode = transformedCode.replace(importCssRegex, '');
+            transformedCode = transformedCode.replace(importReactDOMRegex, '');
+            transformedCode = transformedCode.replace(reactDomRenderRegex, '');
+
+            let newImports = '';
+            if (defaultImport) {
+                newImports += `const ${defaultImport} = window.React;\n`;
+            } else {
+                newImports += 'const React = window.React;\n';
+            }
+            if (namedImports.size > 0) {
+                newImports += `const { ${Array.from(namedImports).join(', ')} } = React;\n`;
+            }
+
+            const result = newImports + transformedCode;
+            return result.replace(/export default \w+;\s*$/, '');
+        }
+
+        function createPreviewElement(codeBlocks) {
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'preview-container';
+
+            const header = document.createElement('div');
+            header.className = 'preview-header';
+            header.textContent = 'Combined Preview';
+            previewContainer.appendChild(header);
+
+            const content = document.createElement('div');
+            content.className = 'preview-content';
+            previewContainer.appendChild(content);
+
+            const iframe = document.createElement('iframe');
+            iframe.sandbox = 'allow-scripts allow-modals allow-same-origin allow-forms';
+            content.appendChild(iframe);
+
+            let htmlCode = '';
+            let cssCode = '';
+            let jsCode = '';
+            let reactCode = '';
+
+            codeBlocks.forEach(block => {
+                switch (block.language.toLowerCase()) {
+                    case 'html':
+                        htmlCode = block.code || '';
+                        break;
+                    case 'css':
+                        cssCode += block.code + '\n';
+                        break;
+                    case 'javascript':
+                    case 'js':
+                        jsCode += block.code + '\n';
+                        break;
+                    case 'jsx':
+                    case 'react':
+                        reactCode += block.code + '\n';
+                        break;
+                }
+            });
+
+            let iframeContent = '';
+
+            if (reactCode) {
+                // const transformedReactCode = transformImports(reactCode);
+
+                let transformedReactCode;
+                    try {
+                        transformedReactCode = transformImports(reactCode);
+                    } catch (error) {
+                        console.error("Error transforming code:", error);
+                        transformedReactCode = '';
+                    }
+                const componentNameMatch = reactCode.match(/export default (\w+);/);
+                const componentName = componentNameMatch ? componentNameMatch[1] : 'App';
+
+                // iframeContent = `
+                //     <!DOCTYPE html>
+                //     <html>
+                //         <head>
+                //             <meta charset="utf-8" />
+                //             <style>${cssCode}</style>
+                //             <script src="https://unpkg.com/react@17/umd/react.production.min.js"><\/script>
+                //             <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"><\/script>
+                //             <script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>  
+                //         </head>
+                //         <body>
+                //             <div id="app"></div>
+                //             ${htmlCode}
+                //             <script type="text/babel">
+                //                 ${transformedReactCode}
+                //                 ReactDOM.render(React.createElement(${componentName}), document.getElementById('app'));
+                //             <\/script>
+                //         </body>
+                //     </html>
+                // `;
+
+                iframeContent = `
+                        <!DOCTYPE html>
+                        <html>
+                            <head>
+                                <meta charset="utf-8" />
+                                <script src="https://unpkg.com/react@17/umd/react.production.min.js"><\/script>
+                                <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"><\/script>
+                                <script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>
+                                 <style>${cssCode}</style>   
+                            </head>
+                            <body>
+                                <div id="app"></div>
+                                <script type="text/babel">
+                                    ${transformedReactCode}
+                                    ReactDOM.render(React.createElement(${componentName}), document.getElementById('app'));
+                                <\/script>
+                            </body>
+                        </html>
+                    `;
+                    
+            } else {
+                iframeContent = `
+                    <!DOCTYPE html>
+                    <html>
+                        <head>
+                            <meta charset="utf-8" />
+                            <style>${cssCode}</style>
+                        </head>
+                        <body>
+                            ${htmlCode}
+                            <script>${jsCode}<\/script>
+                        </body>
+                    </html>
+                `;
+            }
+
+            iframe.srcdoc = iframeContent;
+            return previewContainer;
+        }
+
+        window.electron.onCodePreview((event, codeBlocks) => {
+            console.log('Received code blocks:', codeBlocks);
+            const root = document.getElementById('preview-root');
+            root.innerHTML = '';
+
+            const previewElement = createPreviewElement(codeBlocks);
+            root.appendChild(previewElement);
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' https://cdn.jsdelivr.net;">
+    <title>Code Preview</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .preview-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .preview-header {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+        }
+        .preview-content {
+            padding: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="preview-root"></div>
+    <script>
+        function transformImports(code) {
+            const importReactRegex = /import\s+(?:(\w+)\s*,?\s*)?(?:{([^}]+)})?\s+from\s+['"]react['"];?/g;
+            const importCssRegex = /import\s+['"]([^'"]+\.css)['"];?/g;
+            const importReactDOMRegex = /import\s+\w+\s+from\s+['"]react-dom['"];?/g;
+            const reactDomRenderRegex = /ReactDOM\.render\s*$$.+$$;?/g;
+            const importComponentRegex = /import\s+(\w+)\s+from\s+['"]\.\/(components\/)?(\w+)['"];?/g;
+
+            let transformedCode = code;
+            let match;
+            let defaultImport = '';
+            const namedImports = new Set();
+            const componentImports = new Map();
+
+            while ((match = importReactRegex.exec(code)) !== null) {
+                if (match[1]) {
+                    defaultImport = match[1].trim();
+                }
+                if (match[2]) {
+                    match[2].split(',').forEach((imp) => namedImports.add(imp.trim()));
+                }
+            }
+
+            while ((match = importComponentRegex.exec(code)) !== null) {
+                componentImports.set(match[3], match[1]);
+            }
+
+            transformedCode = transformedCode.replace(importReactRegex, '');
+            transformedCode = transformedCode.replace(importCssRegex, '');
+            transformedCode = transformedCode.replace(importReactDOMRegex, '');
+            transformedCode = transformedCode.replace(reactDomRenderRegex, '');
+            transformedCode = transformedCode.replace(importComponentRegex, '');
+
+            let newImports = '';
+            if (defaultImport) {
+                newImports += `const ${defaultImport} = window.React;\n`;
+            } else {
+                newImports += 'const React = window.React;\n';
+            }
+            if (namedImports.size > 0) {
+                newImports += `const { ${Array.from(namedImports).join(', ')} } = React;\n`;
+            }
+
+            const result = newImports + transformedCode;
+            return { code: result.replace(/export default (\w+);?\s*$/, 'return $1;'), componentImports };
+        }
+
+        function createPreviewElement(codeBlocks) {
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'preview-container';
+
+            const header = document.createElement('div');
+            header.className = 'preview-header';
+            header.textContent = 'Combined Preview';
+            previewContainer.appendChild(header);
+
+            const content = document.createElement('div');
+            content.className = 'preview-content';
+            previewContainer.appendChild(content);
+
+            const iframe = document.createElement('iframe');
+            iframe.sandbox = 'allow-scripts allow-modals allow-same-origin allow-forms';
+            content.appendChild(iframe);
+
+            let htmlCode = '';
+            let cssCode = '';
+            let jsCode = '';
+            let reactComponents = new Map();
+
+            codeBlocks.forEach(block => {
+                switch (block.language.toLowerCase()) {
+                    case 'html':
+                        htmlCode = block.code || '';
+                        break;
+                    case 'css':
+                        cssCode += block.code + '\n';
+                        break;
+                    case 'javascript':
+                    case 'js':
+                        jsCode += block.code + '\n';
+                        break;
+                    case 'jsx':
+                    case 'react':
+                        const { code, componentImports } = transformImports(block.code);
+                        reactComponents.set(block.filename || 'App', { code, imports: componentImports });
+                        break;
+                }
+            });
+
+            let iframeContent = '';
+
+            if (reactComponents.size > 0) {
+                let transformedReactCode = '';
+                let rootComponent = '';
+
+                reactComponents.forEach((component, filename) => {
+                    transformedReactCode += `
+                        const ${filename} = (() => {
+                            ${component.code}
+                        })();
+                    `;
+
+                    if (filename === 'index' || filename === 'App') {
+                        rootComponent = filename;
+                    }
+                });
+
+                if (!rootComponent) {
+                    rootComponent = Array.from(reactComponents.keys())[0];
+                }
+
+                iframeContent = `
+                    <!DOCTYPE html>
+                    <html>
+                        <head>
+                            <meta charset="utf-8" />
+                            <script src="https://unpkg.com/react@17/umd/react.production.min.js"><\/script>
+                            <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"><\/script>
+                            <script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>
+                            <style>${cssCode}</style>   
+                        </head>
+                        <body>
+                            <div id="app"></div>
+                            <script type="text/babel">
+                                ${transformedReactCode}
+                                ReactDOM.render(React.createElement(${rootComponent}), document.getElementById('app'));
+                            <\/script>
+                        </body>
+                    </html>
+                `;
+            } else {
+                iframeContent = `
+                    <!DOCTYPE html>
+                    <html>
+                        <head>
+                            <meta charset="utf-8" />
+                            <style>${cssCode}</style>
+                        </head>
+                        <body>
+                            ${htmlCode}
+                            <script>${jsCode}<\/script>
+                        </body>
+                    </html>
+                `;
+            }
+
+            iframe.srcdoc = iframeContent;
+            return previewContainer;
+        }
+
+        window.electron.onCodePreview((event, codeBlocks) => {
+            console.log('Received code blocks:', codeBlocks);
+            const root = document.getElementById('preview-root');
+            root.innerHTML = '';
+
+            const previewElement = createPreviewElement(codeBlocks);
+            root.appendChild(previewElement);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App.css or relevant parent component CSS */
+.flex-grow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Ensure relative positioning context if needed */
+}
+
+.tabs-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+

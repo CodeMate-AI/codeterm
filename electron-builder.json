@@ -1,0 +1,41 @@
+{
+  "appId": "dev.commandline.codemate.ai-terminal",
+  "productName": "CodeTerm",
+  "files": [
+    "dist-electron",
+    "dist-react"
+  ],
+  "extraResources": [
+    "dist-electron/preload.cjs",
+    "src/assets/**"
+  ],
+  "mac": {
+    "icon": "src/assets/icons/mac/icon.icns",
+    "target": "dmg",
+    "extraResources": [
+      {
+        "from": "backend/dist/macOS/mainSave",
+        "to": "backend/mainSave"
+      }
+    ]
+  },
+  "linux": {
+    "icon": "src/assets/icons/png",
+  "target": [
+    "AppImage", "deb"
+  ],
+  "category": "Utility",
+  "maintainer": "Your Name karnwaldhruv84@gmail.com",
+  "description": "An ai-powered terminal",
+  "extraResources": [
+    {
+      "from": "backend/dist/linux/mainSave",
+      "to": "backend/mainSave"
+    }
+  ],
+  "executableName": "CodeTerm-0.0.1"
+},
+"deb": {
+  "afterInstall": "scripts/deb-postinstall.tpl"
+}
+}

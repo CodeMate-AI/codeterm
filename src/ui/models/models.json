@@ -1,0 +1,105 @@
+{ 
+  "models": [
+    {
+      "id": "gpt-4o-mini",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4o Mini",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4o",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4o",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4-turbo",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4 Turbo",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-3.5 Turbo",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4-azure",
+      "provider": "OpenAI (Azure)",
+      "providerId": "openaiAzure",
+      "name": "azure",
+      "multiModal": true
+    },
+    {
+      "id": "gemini/gemini-pro",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini Pro",
+      "multiModal": true
+    },
+    {
+      "id": "gemini/gemini-1.5-flash",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini 1.5 Flash",
+      "multiModal": true
+    },
+    
+    {
+      "id": "gemini/gemini-1.0-pro",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini 1.0 pro",
+      "multiModal": true
+    },
+    {
+      "id": "anthropic/claude-3-5-sonnet-20240620",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 3.5 Sonnet",
+      "multiModal": true
+    },
+    {
+      "id": "anthropic/claude-3-5-haiku-20241022",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 3 haiku",
+      "multiModal": true
+    },
+    {
+      "id": "anthropic/claude-3-opus-20240229",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 3 Opus",
+      "multiModal": true
+    },
+    {
+      "id": "claude-2.1",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 2.1",
+      "multiModal": true
+    },
+    {
+      "id": "claude-2",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 2",
+      "multiModal": true
+    }
+
+
+  ]
+}

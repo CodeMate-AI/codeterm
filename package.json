@@ -1,0 +1,110 @@
+{
+  "name": "CodeTerm",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "productName": "CodeTerm",
+  "description": "AI-Powered Open-Source Terminal Designed for Effortless Productivity",
+  "author": {
+    "name": "CodeMate Inc",
+    "email": "contact@codemate.ai"
+  },
+"repository": "https://github.com/CodeMate-AI/codeterm.git",
+  "publish": {
+    "provider": "github",
+    "owner": "CodeMate-AI",
+    "repo": "codeterm",              
+    "releaseType": "release"
+  },
+  "homepage": "https://codemate.ai/",
+  "dependencies": {
+    "@babel/standalone": "^7.25.7",
+    "@monaco-editor/react": "^4.6.0",
+    "@syncfusion/ej2-react-layouts": "^27.1.56",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-resizable": "^3.0.8",
+    "@types/socket.io-client": "^3.0.0",
+    "ace-builds": "^1.36.2",
+    "ansi-to-html": "^0.7.2",
+    "axios": "^1.7.7",
+    "debounce": "^2.1.1",
+    "dotenv": "^16.4.5",
+    "electron-updater": "^6.3.9",
+    "file-type": "^19.5.0",
+    "framer-motion": "^11.11.0",
+    "mime": "^4.0.4",
+    "mime-db": "^1.53.0",
+    "mime-types": "^2.1.35",
+    "monaco-editor": "^0.52.0",
+    "react": "^18.3.1",
+    "react-ace": "^12.0.0",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "react-markdown": "^9.0.1",
+    "react-monaco-editor": "^0.56.2",
+    "react-resizable": "^3.0.5",
+    "react-syntax-highlighter": "^15.5.0",
+    "socket.io-client": "^4.7.5",
+    "typescript": "^4.9.5",
+    "update-electron-app": "^3.0.0",
+    "uuid": "^10.0.0",
+    "web-vitals": "^2.1.4",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0"
+  },
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:react dev:electron",
+    "dev:react": "vite",
+    "dev:electron": "npm run transpile:electron && cross-env NODE_ENV=development electron .",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "transpile:electron": "tsc --project src/electron/tsconfig.json",
+    "dist:mac": "npm run transpile:electron && npm run build && electron-builder --mac --arm64",
+    "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64",
+    "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64",
+    "test:unit": "vitest src"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.3.5",
+    "@types/debounce": "^1.2.4",
+    "@types/mime-db": "^1.43.5",
+    "@types/node": "^22.9.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.1.7",
+    "npm-run-all": "^4.1.5",
+    "path-browserify": "^1.0.1",
+    "postcss": "^8.4.44",
+    "tailwindcss": "^3.4.10",
+    "vite": "^5.4.8",
+    "vite-plugin-html": "^3.2.2"
+  }
+}
