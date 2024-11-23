@@ -1,5 +1,5 @@
 {
-  "appId": "dev.commandline.codemate.ai-terminal",
+  "appId": "codemate.ai-terminal",
   "productName": "CodeTerm",
   "files": [
     "dist-electron",
