@@ -1,19 +1,23 @@
-# CodeTerm Terminal
+
+# CodeMate AI Terminal
 
 **Version**: 0.0.1  
 **Product Name**: CodeTerm  
-**Description**: AI-Powered Open-Source Terminal Designed for Effortless Productivity
+**Description**: An open-source AI powered terminal for the next-gen developers to master command line on Day one.
 
 ## Introduction
 
-CodeTerm is an open-source terminal designed to enhance the command-line interface (CLI) experience with context-driven AI. It includes essential features such as a basic terminal, directory navigation, a built-in graphical code/text editor, and AI-powered chat support—all integrated within the terminal. By leveraging the efficiency of the CLI alongside the intelligence of AI, CodeTerm offers a unified environment where users can seamlessly execute text-based commands and receive dynamic, context-aware assistance.
+CodeTerm is an open-source terminal designed to enhance the command-line interface (CLI) experience with context-driven AI integration. It includes essential features such as integrated terminal with Natural language to command functionality, directory navigation, a built-in code/text editor, and AI-powered chat to generate code snippets with preview compoment. By leveraging the efficiency of the CLI alongside the intelligence of AI, CodeTerm offers a unified environment where users can seamlessly execute text-based commands and receive dynamic, context-aware assistance.
 
-CodeTerm is a revolutionary terminal that redefines how we interact with command-line interfaces. Traditionally, there’s been a clear distinction between the speed and efficiency of the CLI and the need for graphical elements, such as native widgets, copy/paste functionality, scrolling, and adjustable fonts, which often require separate web-based tools. CodeTerm eliminates this divide by merging the best features of both CLI and graphical interfaces into one cohesive, powerful platform, providing a seamless experience that caters to all your command-line and graphical needs.
+CodeTerm is a revolutionary terminal that redefines how we interact with command-line interfaces. Traditionally, there’s been a clear distinction between the speed and efficiency of the CLI and the need for custom themes, copy/paste functionality, scrolling, and adjustable fonts, which often require separate web-based tools. CodeTerm eliminates this by merging the best features of both CLI and graphical based interfaces into one cohesive, AI powered terminal, providing a seamless experience that caters to all your command-line and graphical needs.
+
 
 ## Installation
 
 CodeTerm Terminal works on macOS and Linux .
-You can also install CodeTerm Terminal directly from: [www.codeTerm.dev/download](https://www./download).
+You can also install CodeTerm Terminal directly from: [cli.codemate.ai/download](https://cli.codemate.ai/download).
+
+
 
 ## Getting Started For Development
 
@@ -26,7 +30,7 @@ To get started with CodeTerm, follow these steps:
 First, clone the CodeTerm repository to your local machine using the following command:
 
 ```sh
-git clone https://github.com/your-repo/codeterm.git
+git clone https://github.com/CodeMate-AI/codeterm.git
 cd codeterm
 ```
 
@@ -68,7 +72,7 @@ npm run dev
 First, clone the CodeTerm repository to your local machine using the following command:
 
 ```sh
-git clone https://github.com/your-repo/codeterm.git
+git clone https://github.com/CodeMate-AI/codeterm.git
 cd codeterm
 ```
 
@@ -88,6 +92,7 @@ To run CodeTerm in development mode, use the following command:
 npm run dev
 ```
 
+
 ### Minimum requirements
 
 CodeTerm Terminal and WSH run on the following platforms:
@@ -101,11 +106,13 @@ CodeTerm Terminal and WSH run on the following platforms:
 - Download Page &mdash; https://cli.codemate.ai/download
 - Documentation &mdash; https://docs.codemate.ai/
 
+
 ## Contributing
 
 CodeTerm uses GitHub Issues for issue tracking.
 
 Find more information in our [Contributions Guide](CONTRIBUTING.md), which includes:
+
 
 ## Author
 
