@@ -19,15 +19,15 @@ You can also install CodeTerm Terminal directly from: [cli.codemate.ai/download]
 
 
 
-## Getting Started For Development 
-
+## Getting Started For Development
 
 To get started with CodeTerm, follow these steps:
+
+### For MacOS Users:
 
 1. **Clone the Repository**:
 
 First, clone the CodeTerm repository to your local machine using the following command:
-
 
 ```sh
 git clone https://github.com/CodeMate-AI/codeterm.git
@@ -36,10 +36,54 @@ cd codeterm
 
 2. **Install the dependencies**:
 
-Install the required dependencies by running the command:
+Tnstall the required dependencies by running the command:
+
 ```sh
 npm install
 ```
+
+3. **Grant executable permissions to the backend executable file:**
+
+```sh
+cd backend/dist/macOS/
+```
+
+```sh
+chmod +x ./mainSave
+```
+
+```sh
+cd ../../../
+```
+
+4. **Usage**:
+
+To run CodeTerm in development mode, use the following command:
+
+```sh
+npm run dev
+```
+
+
+### For Linux Users:
+
+1. **Clone the Repository**:
+
+First, clone the CodeTerm repository to your local machine using the following command:
+
+```sh
+git clone https://github.com/CodeMate-AI/codeterm.git
+cd codeterm
+```
+
+2. **Install the dependencies**:
+
+Tnstall the required dependencies by running the command:
+
+```sh
+npm install
+```
+
 3. **Usage**:
 
 To run CodeTerm in development mode, use the following command:

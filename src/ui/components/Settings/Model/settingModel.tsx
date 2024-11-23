@@ -110,7 +110,7 @@ export default function SettingsModal({
         isModalOpen ? "block" : "hidden"
       } z-10`}
     >
-      <div className="bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] text-[--textColor] rounded-lg w-2/4 shadow-xl h-[500px]">
+      <div className="bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] text-[--textColor] rounded-lg xl:w-2/4 w-[600px] shadow-xl h-[500px]">
         <div className="flex justify-between items-center p-4 border-b border-[--borderColor]">
           <h2 className="custom-font-size font-semibold">Settings</h2>
           <button

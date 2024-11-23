@@ -404,7 +404,7 @@ export const AiChat: React.FC<AiChatProps> = ({
     if (input.length === 0) {
       setSuggestion("");
     }
-  }, [input]);
+  }, [input, suggestion]);
 
   // Handle socket events for command output and suggestions
   useEffect(() => {
@@ -420,7 +420,7 @@ export const AiChat: React.FC<AiChatProps> = ({
       if (data.terminal_id === chatId) {
         setIsAiThinking(false);
         const fileSystem = undefined;
-
+        // setSuggestion("");
         addMessage(
           data.output,
           data.status,
@@ -541,12 +541,6 @@ export const AiChat: React.FC<AiChatProps> = ({
     }
   }, [tabs, tabId, chatId]);
 
-  // Clear suggestion if input is empty
-  useEffect(() => {
-    if (input.length === 0) {
-      setSuggestion("");
-    }
-  }, [input]);
 
   // Handle creation of new code
   const onCreateCode = (code: string) => {
@@ -574,19 +568,6 @@ export const AiChat: React.FC<AiChatProps> = ({
         >
           {isStreaming && (
             <div className="p-4 bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--scrollbarThumbColor] text-[--primaryTextColor] border-l-4 border-l-[--borderColor]">
-              <div className="flex items-center">
-                <FiMessageCircle
-                  className="mr-2 text-[--darkBlueColor]"
-                  size={18}
-                />
-                <span className="text-xs text-[--textColor]">
-                  {new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  })}
-                </span>
-              </div>
               <span className="custom-font-size pt-2">{aiInputValue}</span>
               <EnhancedMarkdown
                 markdownContent={streamingContent}
@@ -607,8 +588,9 @@ export const AiChat: React.FC<AiChatProps> = ({
                 key={message.id}
                 className={`
                                         p-4 
-                                        border-b-[1px] 
                                         border-t-[1px] 
+                                        border-opacity-50
+                                        border-t-[--outputBorderColor]
                                         ${
                                           message.type === "error"
                                             ? "bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--redColorGradientStart] text-[--primaryTextColor] border-l-4 border-l-[--darkRedColor]"
@@ -624,24 +606,6 @@ export const AiChat: React.FC<AiChatProps> = ({
                                 
                                       `}
               >
-                <div className="flex items-center mb-1">
-                  {message.type === "error" && (
-                    <FiAlertTriangle
-                      className="mr-2 text-[--darkRedColor]"
-                      size={18}
-                    />
-                  )}
-
-                  {message.type === "nlp" && (
-                    <FiMessageCircle
-                      className="mr-2 text-[--darkBlueColor]"
-                      size={18}
-                    />
-                  )}
-                  <span className="custom-font-size text-[--textColor]">
-                    {message.timestamp}
-                  </span>
-                </div>
                 <span className="custom-font-size pt-2">
                   {message.current_cmd}
                 </span>

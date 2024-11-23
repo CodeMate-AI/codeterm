@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export function useTabs() {
-
   // State to manage the global split level and depth of tabs
   const [globalSplitLevel, setGlobalSplitLevel] = useState(0);
   const [globalDepth, setGlobalDepth] = useState(0);
@@ -400,8 +399,8 @@ export function useTabs() {
   );
 
   const setSudoPasswordTab = (tabId: string, password: string) => {
-    setTabs((prevTabs) =>
-      prevTabs.map((tab) => {
+    setTabs((prevTabs) => {
+      const updatedTabs = prevTabs.map((tab) => {
         if (tab.id !== tabId) {
           return tab;
         }
@@ -411,8 +410,11 @@ export function useTabs() {
           isSudoPassword: true,
           sudoPassword: password,
         };
-      })
-    );
+      });
+      sessionStorage.setItem("tabs", JSON.stringify(updatedTabs));
+
+      return updatedTabs;
+    });
   };
 
   // Function to check if a tab is a sudo password tab

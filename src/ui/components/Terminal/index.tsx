@@ -23,6 +23,7 @@ import {
 } from "../../types/terminalTypes";
 import { useTabs } from "../../hooks/useTab";
 import { parseDirectoryListing } from "../../utils/fileSystem";
+import CircularLoader from "../../utils/circularLoader";
 
 // Creating an instance of the Convert class
 const convert = new Convert();
@@ -80,7 +81,7 @@ export const Terminal: React.FC<TerminalProps> = ({
   const [copiedCommands, setCopiedCommands] = useState<{
     [key: string]: boolean;
   }>({});
-  const [promptLabel, setPromptLabel] = useState<string>("starting bash... ");
+  const [promptLabel, setPromptLabel] = useState<string>("starting bash ");
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const [isCreatingFile, setIsCreatingFile] = useState<boolean>(false);
@@ -145,7 +146,7 @@ export const Terminal: React.FC<TerminalProps> = ({
 
   // Request the current directory when the tabId changes
   useEffect(() => {
-    if(!Socket || !isConnected) return ;
+    if (!Socket || !isConnected) return;
     socket.emit("getCurrentDirectory", { terminal_id: terminalId });
   }, [tabId, socket, isConnected]);
 
@@ -393,11 +394,11 @@ export const Terminal: React.FC<TerminalProps> = ({
   );
 
   /**
- * useEffect hook to automatically scroll the history container to the bottom
- * whenever the terminal history or showHistory state changes.
- *
- * Dependencies: [terminalHistory, showHistory]
- */
+   * useEffect hook to automatically scroll the history container to the bottom
+   * whenever the terminal history or showHistory state changes.
+   *
+   * Dependencies: [terminalHistory, showHistory]
+   */
   useEffect(() => {
     if (historyRef.current && showHistory) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
@@ -405,11 +406,11 @@ export const Terminal: React.FC<TerminalProps> = ({
   }, [terminalHistory, showHistory]);
 
   /**
- * useEffect hook to automatically scroll the messages container to the top
- * whenever the messages state changes.
- *
- * Dependencies: [messages]
- */
+   * useEffect hook to automatically scroll the messages container to the top
+   * whenever the messages state changes.
+   *
+   * Dependencies: [messages]
+   */
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = 0;
@@ -417,9 +418,9 @@ export const Terminal: React.FC<TerminalProps> = ({
   }, [messages]);
 
   /**
- * Function to simulate a key press event for the "Ctrl + ," key combination.
- * This creates a new KeyboardEvent and dispatches it to the document.
- */
+   * Function to simulate a key press event for the "Ctrl + ," key combination.
+   * This creates a new KeyboardEvent and dispatches it to the document.
+   */
   function simulateKeyPress() {
     const ctrlKey = new KeyboardEvent("keydown", {
       key: ",",
@@ -433,7 +434,7 @@ export const Terminal: React.FC<TerminalProps> = ({
   }
 
   useEffect(() => {
-    if(!socket || !isConnected) return ;
+    if (!socket || !isConnected) return;
     const handleSuccessSudoPassword = (data: {
       terminal_id: string;
       password: string;
@@ -448,7 +449,14 @@ export const Terminal: React.FC<TerminalProps> = ({
     return () => {
       socket.off("success_sudo_password", handleSuccessSudoPassword);
     };
-  }, [tabId, terminalId, getIsSudoPassword, setSudoPasswordTab, socket, isConnected]);
+  }, [
+    tabId,
+    terminalId,
+    getIsSudoPassword,
+    setSudoPasswordTab,
+    socket,
+    isConnected,
+  ]);
 
   // Handle socket events for current directory and create session
   useEffect(() => {
@@ -520,19 +528,18 @@ export const Terminal: React.FC<TerminalProps> = ({
     // }, [socket, terminalId, tabId, isConnected]);
   }, [socket, isConnected]);
 
-
   useEffect(() => {
     fetchTerminalHistory();
   }, [fetchTerminalHistory]);
 
   /**
- * useEffect hook to update the messages state whenever the content changes.
- * This hook maps over the content array and transforms each item into a message object
- * with properties such as id, text, type, timestamp, current_cmd, fileSystem, and isStreaming.
- * If the input command starts with "dir" or "ls", it parses the output to generate a file system structure.
- *
- * Dependencies: [content]
- */
+   * useEffect hook to update the messages state whenever the content changes.
+   * This hook maps over the content array and transforms each item into a message object
+   * with properties such as id, text, type, timestamp, current_cmd, fileSystem, and isStreaming.
+   * If the input command starts with "dir" or "ls", it parses the output to generate a file system structure.
+   *
+   * Dependencies: [content]
+   */
   useEffect(() => {
     setMessages(
       content.map((item, index) => ({
@@ -827,7 +834,7 @@ export const Terminal: React.FC<TerminalProps> = ({
         setIsAiThinking(false);
         const fileSystem =
           data.current_cmd.startsWith("dir") ||
-          data.current_cmd.startsWith("ls")
+            data.current_cmd.startsWith("ls")
             ? parseDirectoryListing(data.output, platform)
             : undefined;
 
@@ -928,7 +935,7 @@ export const Terminal: React.FC<TerminalProps> = ({
         setIsLoading(false);
         const fileSystem =
           data.current_cmd.startsWith("dir") ||
-          data.current_cmd.startsWith("ls")
+            data.current_cmd.startsWith("ls")
             ? parseDirectoryListing(streamingContent, platform)
             : undefined;
 
@@ -967,19 +974,15 @@ export const Terminal: React.FC<TerminalProps> = ({
     handleShowCodePreview,
   ]);
 
-  useEffect(() => {
-    if (input.length === 0) {
-      setSuggestion("");
-    }
-  }, [input]);
 
   /**
- * Toggles the selection state of a given message in the context.
- * If the message is already selected, it will be removed from the selected context.
- * If the message is not selected, it will be added to the selected context.
- *
- * @param {Message} message - The message object to be toggled in the selected context.
- */
+   * Toggles the selection state of a given message in the context.
+   * If the message is already selected, it will be removed from the selected context.
+   * If the message is not selected, it will be added to the selected context.
+   *
+   * @param {Message} message - The message object to be toggled in the selected context.
+   */
+
   const toggleMessageSelection = useCallback((message: Message) => {
     setSelectedContext((prevContext) => {
       const isAlreadySelected = prevContext.some(
@@ -994,7 +997,8 @@ export const Terminal: React.FC<TerminalProps> = ({
   }, []);
 
   // Handle creation of copy value
-  const onCopyCode = () => {};
+  const onCopyCode = () => { };
+
   return (
     <>
       <div className="custom-flex-grow-for-message-container flex pb-10 w-full h-full hide-scrollbar">
@@ -1022,19 +1026,6 @@ export const Terminal: React.FC<TerminalProps> = ({
         >
           {isStreaming && (
             <div className="p-4 bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--scrollbarThumbColor] text-[--primaryTextColor] border-l-4 border-l-[--borderColor]">
-              <div className="flex items-center mb-1">
-                <FiMessageCircle
-                  className="mr-2 text-[--darkBlueColor]"
-                  size={18}
-                />
-                <span className="custom-font-size text-[--textColor]">
-                  {new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  })}
-                </span>
-              </div>
               <span className="custom-font-size pt-2">{aiInputValue}</span>
               <EnhancedMarkdown
                 markdownContent={streamingContent}
@@ -1054,25 +1045,18 @@ export const Terminal: React.FC<TerminalProps> = ({
                 key={message.id}
                 className={`
         p-4 
-        border-b-[1px] 
-        border-t-[1px] 
-        
-        ${
-          selectedContext.some((msg) => msg.id === message.id)
-            ? "border-2 border-yellow-500"
-            : "border-l-4 border-l-[--borderColor]"
-        }
-        ${
-          message.type === "error"
-            ? "bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--redColorGradientStart] text-[--primaryTextColor] border-l-4 border-l-[--darkRedColor]"
-            : message.type === "success"
-            ? "bg-opacity-10 text-[--primaryTextColor] border-l-4 border-l-[--darkGreenColor]"
-            : "bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--scrollbarThumbColor] text-[--primaryTextColor] border-l-4 border-l-[--borderColor]"
-        }
+        ${selectedContext.some((msg) => msg.id === message.id)
+                    ? "border-[1px] border-[--yellowColor]"
+                    : "border-t-[1px] border-opacity-50 border-t-[--outputBorderColor] "
+                  }
+        ${message.type === "error"
+                    ? "bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--redColorGradientStart] text-[--primaryTextColor] border-l-4 border-l-[--darkRedColor]"
+                    : message.type === "success"
+                      ? "bg-opacity-10 text-[--primaryTextColor] border-l-4 border-l-[--darkGreenColor]"
+                      : "bg-opacity-50 bg-gradient-to-l from-[--bgGradientStart] to-[--scrollbarThumbColor] text-[--primaryTextColor] border-l-4 border-l-[--borderColor]"
+                  }
                   ${index === 0 && isAiThinking ? "mb-12" : ""}
                   ${index === 0 && isSudoCommandExecuting ? "mb-12" : ""}
-                  
-
       `}
                 onDoubleClick={() => {
                   if (prompt) {
@@ -1080,31 +1064,6 @@ export const Terminal: React.FC<TerminalProps> = ({
                   }
                 }}
               >
-                <div className="flex items-center mb-1">
-                  {message.type === "error" && (
-                    <FiAlertTriangle
-                      className="mr-2 text-[--darkRedColor]"
-                      size={18}
-                    />
-                  )}
-                  {message.type === "success" && (
-                    <FiCheckCircle
-                      className="mr-2 text-[--darkGreenColor]"
-                      size={18}
-                    />
-                  )}
-                  {message.type === "nlp" && (
-                    <FiMessageCircle
-                      className="mr-2 text-[--darkBlueColor]"
-                      size={18}
-                    />
-                  )}
-                  <div className="flex h-full justify-center items-center">
-                    <span className="custom-font-size text-[--textColor]">
-                      {message.timestamp}
-                    </span>
-                  </div>
-                </div>
                 <span className="custom-font-size pt-2">
                   {message.current_cmd}
                 </span>
@@ -1193,15 +1152,13 @@ export const Terminal: React.FC<TerminalProps> = ({
         </div>
       </div>
       <div
-        className={`absolute z-10 bottom-0 h-10 text-[--textColor] p-2 custom-font-size leading-relaxed font-mono w-full bg-[--bgColor] border-t border-[--borderColor] ${
-          prompt ? "border border-yellow-400" : ""
-        }`}
+        className={`absolute z-10 bottom-0 h-10 text-[--textColor] p-2 custom-font-size leading-relaxed font-mono w-full bg-[--bgColor] border-t border-[--borderColor] ${prompt ? "border border-yellow-400" : ""
+          }`}
       >
         <div
           ref={historyRef}
-          className={`absolute left-0 right-0 bottom-10 overflow-y-auto hide-scrollbar bg-[--darkGrayColor]  flex flex-col-reverse z-100 max-h-[8.75rem] p-4 w-full ${
-            showHistory ? "" : "hidden"
-          }`}
+          className={`absolute left-0 right-0 bottom-10 overflow-y-auto hide-scrollbar bg-[--darkGrayColor]  flex flex-col-reverse z-100 max-h-[8.75rem] p-4 w-full ${showHistory ? "" : "hidden"
+            }`}
         >
           {terminalHistory.length > 0 ? (
             terminalHistory
@@ -1210,18 +1167,16 @@ export const Terminal: React.FC<TerminalProps> = ({
               .map((line, index) => (
                 <div
                   key={index}
-                  className={`rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2 ${
-                    historyIndex === terminalHistory.length - 1 - index
+                  className={`rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2 ${historyIndex === terminalHistory.length - 1 - index
                       ? "bg-gradient-to-br from-[--blueColor] to-[--darkBlueColor] text-[--textColor]"
                       : ""
-                  }`}
+                    }`}
                 >
                   <div
-                    className={`p-1 ${
-                      historyIndex === terminalHistory.length - 1 - index
+                    className={`p-1 ${historyIndex === terminalHistory.length - 1 - index
                         ? "text-[--textColor]"
                         : "text-[--primaryTextColor]"
-                    }`}
+                      }`}
                   >
                     <h3 className="custom-font-size font-normal">{line}</h3>
                   </div>
@@ -1238,13 +1193,16 @@ export const Terminal: React.FC<TerminalProps> = ({
           )}
         </div>
         <div className="flex items-center w-full overflow-hidden">
-          <div className="text-transparent bg-clip-text bg-gradient-to-r from-[--promptColorGradientStart] to-[--promptColorGradientEnd]">
-            {isPasswordPromptOpen
-              ? "Please enter your password:"
-              : isCreatingFile
-              ? filePromptLabel
-              : promptLabel}
-          </div>
+          <div className={`text-transparent bg-clip-text bg-gradient-to-r from-[--promptColorGradientStart] to-[--promptColorGradientEnd] `}>
+        {isPasswordPromptOpen
+          ? "Please enter your password:"
+          : isCreatingFile
+            ? filePromptLabel
+            : promptLabel}
+      </div>
+      {!isPasswordPromptOpen && !isCreatingFile && promptLabel.startsWith("starting bash") && (
+          <CircularLoader />
+      )}
           <div className="relative flex-1 ml-4 flex items-center text-[--textColor]">
             <div className="relative w-full">
               {isPasswordPromptOpen ? (
@@ -1273,7 +1231,7 @@ export const Terminal: React.FC<TerminalProps> = ({
                   onKeyDown={handleInputKeyDown}
                   onChange={handleInputChange}
                   ref={inputRef}
-                  className="flex-1 bg-transparent text-[--textColor] border-0 outline-none custom-font-size leading-relaxed font-mono w-full"
+                  className="flex-1 bg-transparent text-[--textColor] border-0 outline-none custom-font-size leading-relaxed font-mono w-full "
                   placeholder={
                     prompt
                       ? "Ask in natural language"
@@ -1289,11 +1247,10 @@ export const Terminal: React.FC<TerminalProps> = ({
                   {directories.map((dir, index) => (
                     <div
                       key={dir.name}
-                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer ${
-                        index === selectedIndex
-                          ? "bg-pink-500 text-white"
+                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer ${index === selectedIndex
+                          ? "bg-pink-500 text-[--textColor]"
                           : "hover:bg-zinc-700"
-                      }`}
+                        }`}
                       onClick={() => {
                         setInputValue(`cd ${dir.name}`);
                         setShowDirectoryList(false);

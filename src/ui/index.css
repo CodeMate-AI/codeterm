@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 /* App.css or relevant parent component CSS */
+
 .flex-grow {
   flex: 1;
   display: flex;
@@ -13,4 +14,3 @@
 .tabs-container::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
-

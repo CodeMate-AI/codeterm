@@ -46,6 +46,7 @@ body{
   --grayColor: #808080;
   --lightGrayColor: #a0a0a0;
   --darkGrayColor: #4d4d4d;
+  --outputBorderColor: #6d6d6ed1;
   --shadowColor: rgba(0, 0, 0, 0.5);
   --shadowColorLight: rgba(0, 0, 0, 0.3);
 }
@@ -93,6 +94,7 @@ body{
   --grayColor: #607b96;
   --lightGrayColor: #8b9eb0;
   --darkGrayColor: #3b4b5b;
+  --outputBorderColor: #6d6d6ed1;
   --shadowColor: rgba(1, 22, 39, 0.5);
   --shadowColorLight: rgba(1, 22, 39, 0.3);
 }
@@ -148,6 +150,7 @@ body{
   --grayColor: #a2a2a2;
   --lightGrayColor: #4d4d4c;
   --darkGrayColor: #888888;
+  --outputBorderColor: #6d6d6ed1;
   --shadowColor: rgba(0, 0, 0, 0.1);
   --shadowColorLight: rgba(0, 0, 0, 0.05);
 }
@@ -205,6 +208,7 @@ body{
   --grayColor: #666666;
   --lightGrayColor: #999999;
   --darkGrayColor: #444444;
+  --outputBorderColor: #6d6d6ed1;
   --shadowColor: rgba(0, 0, 0, 0.3);
   --shadowColorLight: rgba(0, 0, 0, 0.1);
 }
@@ -261,6 +265,7 @@ body{
   --grayColor: #7c6f64;
   --lightGrayColor: #a89984;
   --darkGrayColor: #504945;
+  --outputBorderColor: #6d6d6ed1;
   --shadowColor: rgba(0, 0, 0, 0.3);
   --shadowColorLight: rgba(0, 0, 0, 0.1);
 }
