@@ -93,6 +93,40 @@ npm run dev
 ```
 
 
+## Getting Started For Production
+
+### For Ubuntu Users:
+Ubuntu users can directly proceed with installing and running the application without any additional configuration.
+
+
+
+
+
+
+### For macOS Users:
+
+#### Troubleshooting macOS "App is Damaged" Error
+
+If you encounter an error on macOS stating that the app is "damaged and can't be opened" when attempting to open a `.dmg` file, follow these steps to resolve it.
+
+
+1. **Disable Gatekeeper (if needed)**:
+
+Gatekeeper may block the app from running. To temporarily disable Gatekeeper, run the following command in your terminal:
+
+```sh
+sudo spctl --master-disable
+```
+
+2. **Remove Extended Attributes**:
+
+Use the following command to remove the quarantine flag:
+
+```sh
+sudo xattr -rd com.apple.quarantine /path/to/your/app.dmg
+```
+
+
 ### Minimum requirements
 
 CodeTerm Terminal and WSH run on the following platforms:
