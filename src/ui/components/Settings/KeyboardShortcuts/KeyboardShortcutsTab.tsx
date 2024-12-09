@@ -68,9 +68,7 @@ export function KeyboardShortcutsTab() {
 
   return (
     <div className="overflow-y-auto w-3/4 p-4 max-h-[440px] hide-scrollbar">
-      <h2 className="custom-font-size font-bold mb-2">
-        Configure keyboard shortcuts
-      </h2>
+      <h1 className="text-2xl font-semibold mb-6">keyboard shortcuts</h1>
       {/* <p className="custom-font-size text-gray-400 mb-4">
         Add your own custom keybindings to existing actions below.
         Use <span className="bg-gray-700 px-1 rounded">⌘</span> / <span className="bg-gray-700 px-1 rounded">/</span> to reference these keybindings in a side pane at anytime.
@@ -85,7 +83,7 @@ export function KeyboardShortcutsTab() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <IoMdSearch
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 text-[--grayColor]"
           size={20}
         />
       </div>

@@ -156,6 +156,7 @@ export const AiChat: React.FC<AiChatProps> = ({
     (command: string) => {
       setStreamingContent("");
       setInputValue("");
+      const sessionToken = localStorage.getItem('session_token')
       if (!socket) return;
 
       const contextContent = messages.map((msg) => ({
@@ -171,6 +172,7 @@ export const AiChat: React.FC<AiChatProps> = ({
         prompt: true,
         isContext: isContext,
         context: isContext ? contextContent : undefined,
+        user_session: sessionToken
       });
 
       setChatHistory((prev) => [...prev, command]);
@@ -215,10 +217,11 @@ export const AiChat: React.FC<AiChatProps> = ({
     if (!socket || !isConnected) return;
 
     const handle_signUp_model = (data) => {
-      if (data.terminal_id === chatId) {
-        simulateKeyPress();
-        setIsAiThinking(false);
-      }
+      // if (data.terminal_id === chatId) {
+        // simulateKeyPress();
+        // setIsAiThinking(false);
+      // }
+      // window.electron.openExternalLink("https://codemate.ai/#pricing")
     };
 
     const handleSessionStarted = () => {};
@@ -226,6 +229,8 @@ export const AiChat: React.FC<AiChatProps> = ({
     socket.on("session_started", handleSessionStarted);
 
     socket.on("require_signup_and_model_selection", handle_signUp_model);
+
+    socket.on("limit_exceed", handle_signUp_model);
 
     socket.emit("create_session", { terminal_id: chatId });
 
@@ -288,6 +293,8 @@ export const AiChat: React.FC<AiChatProps> = ({
   // Handle key down events for input
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const sessionToken = localStorage.getItem('session_token')
+      
       if (e.key === "Escape") {
         setShowHistory(false);
         return;
@@ -322,6 +329,7 @@ export const AiChat: React.FC<AiChatProps> = ({
               prompt: true,
               isContext: isContext,
               context: isContext ? contextContent : undefined,
+              user_session: sessionToken
             });
 
             setIsAiThinking(true);
@@ -687,7 +695,7 @@ export const AiChat: React.FC<AiChatProps> = ({
                 </div>
               ))
           ) : (
-            <div className="bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2">
+            <div className="bg-gradient-to-br from-[--scrollbarThumbColor] to-[--scrollbarTrackColor] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2">
               <div className="p-1 text-[--textColor]">
                 <h3 className="custom-font-size font-normal">
                   No Record Found

@@ -95,6 +95,7 @@
     "@types/node": "^22.9.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^10.0.0",
+    "@types/xterm": "^2.0.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",

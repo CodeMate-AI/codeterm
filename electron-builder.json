@@ -17,6 +17,12 @@
         "from": "backend/dist/macOS/mainSave",
         "to": "backend/mainSave"
       }
+    ],
+    "protocols": [
+      {
+        "name": "codeTerm",
+        "schemes": ["codeTerm"]
+      }
     ]
   },
   "linux": {
@@ -33,6 +39,12 @@
       "to": "backend/mainSave"
     }
   ],
+  "protocols": [
+      {
+        "name": "codeTerm",
+        "schemes": ["codeTerm"]
+      }
+    ],
   "executableName": "CodeTerm-0.0.1"
 },
 "deb": {

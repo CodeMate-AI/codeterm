@@ -16,6 +16,7 @@ import { ProductTab } from "../Products/productTab";
 import vsCodeImage from "../../../../assets/vsCode.png";
 import webLogoLightImage from "../../../../assets/web-icon.png";
 import webLogoDarkImage from "../../../../assets/web-icon-dark.png";
+import { AITab } from "../AI/aiTab";
 
 interface SettingsModalProps {
   isModalOpen: boolean;
@@ -32,7 +33,7 @@ export default function SettingsModal({
   isConnected,
   sendMessage,
 }: SettingsModalProps) {
-  const [activeTab, setActiveTab] = useState("appearance");
+  const [activeTab, setActiveTab] = useState("account");
 
   const getTheme = localStorage.getItem("theme");
 
@@ -73,8 +74,10 @@ export default function SettingsModal({
 
   const renderTabContent = () => {
     switch (activeTab) {
-      // case "account":
-      // return <AccountTab />;
+      case "account":
+      return <AccountTab socket={socket}
+      isConnected={isConnected}
+      sendMessage={sendMessage}/>;
       case "appearance":
         return (
           <AppearanceTab
@@ -99,6 +102,8 @@ export default function SettingsModal({
         return <ProductTab products={products} />;
       case "llm-Models":
         return <LLMModelTab socket={socket} isConnected={isConnected} />;
+        case "ai":
+        return <AITab socket={socket} isConnected={isConnected} />;
       default:
         return null;
     }
@@ -123,7 +128,7 @@ export default function SettingsModal({
         <div className="flex h-[434px]">
           <nav className="w-1/4  border-r border-[--borderColor] p-2">
             <ul className="space-y-4">
-              {/* <li
+              <li
                 className={`w-full text-left p-2 rounded cursor-pointer ${
                   activeTab === "account"
                     ? "bg-opacity-50 bg-gradient-to-r from-[--darkBlueColorGradientStart] to-[--purpleColor] text-[--primaryTextColor]"
@@ -132,7 +137,7 @@ export default function SettingsModal({
                 onClick={() => setActiveTab("account")}
               >
                 Account
-              </li> */}
+              </li>
               <li
                 className={`w-full text-left p-2 rounded cursor-pointer ${
                   activeTab === "appearance"
@@ -223,6 +228,16 @@ export default function SettingsModal({
               >
                 Referrals
               </li> */}
+              <li
+                className={`w-full text-left p-2 rounded cursor-pointer ${
+                  activeTab === "ai"
+                    ? "bg-opacity-50 bg-gradient-to-r from-[--darkBlueColorGradientStart] to-[--purpleColor] text-[--primaryTextColor]"
+                    : "text-[--secondaryTextColor] hover:[--darkGrayColor]"
+                }`}
+                onClick={() => setActiveTab("ai")}
+              >
+                AI
+              </li>
               <li
                 className={`w-full text-left p-2 rounded cursor-pointer ${
                   activeTab === "about"

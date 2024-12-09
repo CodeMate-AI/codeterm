@@ -1,5 +1,5 @@
 // Import necessary modules and components from React and other files
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavHead from "./components/NavHead";
 import { useTabs } from "./hooks/useTab";
 import { useSocket } from "./hooks/useSocket";
@@ -40,7 +40,7 @@ function App() {
    * This is typically the address where your Python backend runs during both
    * development and production.
    */
-  
+
   const { socket, isConnected, sendMessage } = useSocket(
     "http://127.0.0.1:5000/"
   );
@@ -74,13 +74,27 @@ function App() {
   // Get the active tab or default to the first tab if no active tab is found
   const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
 
+
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+
+    const selected = localStorage.getItem("selected");
+
+    if (selected === "true") {
+      socket.emit("model_selected", { selected: true });
+    } else {
+      socket.emit("model_selected", { selected: false });
+      socket.emit("get_current_model");
+    }
+  }, [socket, isConnected]);
+
+
   return (
     <div
-      className={`flex flex-col min-h-screen z-0 relative bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] ${
-        isSliderOpen
+      className={`flex flex-col min-h-screen z-0 relative bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] ${isSliderOpen
           ? "pr-80 transition-[padding-right]"
           : "transition-[padding-right]"
-      } font-mono `}
+        } font-mono `}
     >
       <NavHead
         onTabChange={handleTabChange}
@@ -97,27 +111,27 @@ function App() {
         updateTabName={updateTabName}
       />
       <div className="flex z-0 bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] text-[--textColor] overflow-y-auto h-[calc(100vh-40px)] pt-5 w-full">
-          <AdvancedSplitScreen
-            activeTabId={activeTabId}
-            tabContents={tabs.reduce((acc, tab) => {
-              acc[tab.id] = {
-                name: tab.name,
-                children: tab.children,
-              };
-              return acc;
-            }, {} as { [key: string]: { name: string; children: ChildData[] } })}
-            socket={socket}
-            isConnected={isConnected}
-            onSplit={splitChild}
-            onClose={closeChild}
-            onUpdateChild={updateChildData}
-            addTerminalData={addTerminalData}
-            addTabCreateFile={addTabAndReturnId}
-            clearTerminalData={clearTerminalData}
-            tabs={tabs}
-            addPreviewCode={addPreviewCode}
-            splitChildAndAddPreview={splitChildAndAddPreview}
-          />
+        <AdvancedSplitScreen
+          activeTabId={activeTabId}
+          tabContents={tabs.reduce((acc, tab) => {
+            acc[tab.id] = {
+              name: tab.name,
+              children: tab.children,
+            };
+            return acc;
+          }, {} as { [key: string]: { name: string; children: ChildData[] } })}
+          socket={socket}
+          isConnected={isConnected}
+          onSplit={splitChild}
+          onClose={closeChild}
+          onUpdateChild={updateChildData}
+          addTerminalData={addTerminalData}
+          addTabCreateFile={addTabAndReturnId}
+          clearTerminalData={clearTerminalData}
+          tabs={tabs}
+          addPreviewCode={addPreviewCode}
+          splitChildAndAddPreview={splitChildAndAddPreview}
+        />
       </div>
     </div>
   );

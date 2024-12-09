@@ -120,7 +120,7 @@ export function AppearanceTab({
 
   return (
     <div className="overflow-y-auto w-3/4 p-4 max-h-[552px] hide-scrollbar">
-      <h2 className="custom-font-size font-bold mb-4">Themes</h2>
+      <h1 className="text-2xl font-semibold mb-6">Appearance</h1>
       {/* <p className="text-[--textColor] mb-4">Create your own custom theme</p>
 
       <button
