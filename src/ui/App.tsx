@@ -1,5 +1,5 @@
 // Import necessary modules and components from React and other files
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavHead from "./components/NavHead";
 import { useTabs } from "./hooks/useTab";
 import { useSocket } from "./hooks/useSocket";
@@ -73,6 +73,21 @@ function App() {
 
   // Get the active tab or default to the first tab if no active tab is found
   const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
+
+
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+  
+    const selected = localStorage.getItem("selected");
+  
+    if (selected === "true") {
+      socket.emit("model_selected", { selected: true });  
+    } else {
+      socket.emit("model_selected", { selected: false });
+      socket.emit("get_current_model");
+    }
+  }, [socket, isConnected]);
+  
 
   return (
     <div

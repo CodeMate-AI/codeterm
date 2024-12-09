@@ -88,21 +88,59 @@ const CustomBlockquote: React.FC<{ children: React.ReactNode }> = ({
   </blockquote>
 );
 
+// const CustomLink: React.FC<{ href: string; children: React.ReactNode }> = ({
+//   href,
+//   children,
+//   ...props
+// }) => (
+//   <a
+//     href={href}
+//     className="text-[--darkBlueColor] hover:underline"
+//     target="_blank"
+//     rel="noopener noreferrer"
+//     {...props}
+//   >
+//     {children}
+//   </a>
+// );
+
+
 const CustomLink: React.FC<{ href: string; children: React.ReactNode }> = ({
   href,
   children,
   ...props
-}) => (
-  <a
-    href={href}
-    className="text-[--darkBlueColor] hover:underline"
-    target="_blank"
-    rel="noopener noreferrer"
-    {...props}
-  >
-    {children}
-  </a>
-);
+}) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();  // Prevent the default behavior (i.e., navigating within the app)
+    
+    // Check if window.electron exists (in case you're running in a non-Electron environment)
+    if (window.electron && window.electron.openExternalLink) {
+      window.electron.openExternalLink(href)
+        .then(() => {
+          console.log(`Link opened in external browser: ${href}`);
+        })
+        .catch((error) => {
+          console.error('Failed to open external link:', error);
+        });
+    } else {
+      // Fallback if Electron API is not available, open link in the default browser
+      window.open(href, '_blank');
+    }
+  };
+
+  return (
+    <a
+      href={href}
+      className="text-[--darkBlueColor] hover:underline"
+      onClick={handleClick}  // Handle the custom behavior on click
+      {...props}
+    >
+      {children}
+    </a>
+  );
+};
+
+
 
 const CustomCode: React.FC<any> = ({
   node,
@@ -149,14 +187,14 @@ const CustomCode: React.FC<any> = ({
       >
         {copied ? <FiCheck size={20} /> : <FiCopy size={20} />}
       </button>
-      <button
+      {/* <button
         onClick={handleCreate}
         className={`absolute top-0 right-2 m-2 ${buttonClass}`}
         title="Create Code"
         disabled={!isStreaming}
       >
         {created ? <FiCheck size={20} /> : <FaRegFileAlt size={20} />}
-      </button>
+      </button> */}
       <SyntaxHighlighter
         style={vscDarkPlus}
         language={match[1]}

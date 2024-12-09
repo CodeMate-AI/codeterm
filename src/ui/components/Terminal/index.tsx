@@ -24,6 +24,7 @@ import {
 import { useTabs } from "../../hooks/useTab";
 import { parseDirectoryListing } from "../../utils/fileSystem";
 import CircularLoader from "../../utils/circularLoader";
+import HtopTerminal from "../HtopTerminal";
 
 // Creating an instance of the Convert class
 const convert = new Convert();
@@ -110,11 +111,16 @@ export const Terminal: React.FC<TerminalProps> = ({
   const [showDirectoryList, setShowDirectoryList] = useState<boolean>(true);
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [isConfirmationPromptOpen, setIsConfirmationPromptOpen] = useState<boolean>(false);
+  const [htopSession, setHtopSession] = useState<boolean>(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   // Detect the operating system
   const platform = detectOS();
   let filePromptLabel = "Enter filename:";
+
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const clearOutputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Scroll to the bottom of the output when interactiveOutput changes
   useEffect(() => {
@@ -281,14 +287,20 @@ export const Terminal: React.FC<TerminalProps> = ({
         content: msg.text,
       }));
 
+      const isSudoPassword = getIsSudoPassword(tabId);
+      const sessionToken = localStorage.getItem('session_token')
       socket.emit("exec", {
         terminal_id: terminalId,
         input: command,
-        prompt: true,
+        sudoPassword: isSudoPassword
+          ? getSudoPassword(tabId)
+          : sudoPassword,
+        prompt: prompt,
         isContext: isContext,
         isTerminal: true,
         lastTerminalMessages: lastMessages,
         context: isContext ? contextContent : undefined,
+        user_session: sessionToken
       });
 
       setTerminalHistory((prev) => [...prev, command]);
@@ -304,7 +316,7 @@ export const Terminal: React.FC<TerminalProps> = ({
         // Execute commands if it's a directory
         setInputValue(command);
         if (socket && isConnected) {
-          socket.emit("exec", { terminal_id: terminalId, input: command });
+          socket.emit("exec", { terminal_id: terminalId, input: command, isTerminal: true });
           socket.emit("getCurrentDirectory", { terminal_id: terminalId });
           setInputValue("");
         }
@@ -506,7 +518,11 @@ export const Terminal: React.FC<TerminalProps> = ({
     const handle_signUp_model = (data) => {
       if (data.terminal_id === terminalId) {
         simulateKeyPress();
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
+        }
         setIsLoading(false);
+        setIsAiThinking(false);
       }
     };
 
@@ -607,6 +623,37 @@ export const Terminal: React.FC<TerminalProps> = ({
     }
   }, [input, showDirectoryList]);
 
+
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+    socket.on('request_password', (data: { message: string; terminal_id: string }) => {
+      if (data.terminal_id == terminalId) {
+        setIsPasswordPromptOpen(true);
+        setIsSudoCommandExecuting(false);
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current); // Clear the loading timeout
+        }
+      }
+    });
+
+    socket.on('request_confirmation', (data: { message: string; terminal_id: string }) => {
+      if (data.terminal_id == terminalId) {
+        setIsConfirmationPromptOpen(true);
+        setIsSudoCommandExecuting(false);
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current); // Clear the loading timeout
+        }
+      }
+    });
+
+    return () => {
+      socket.off('request_password');
+      socket.off('request_confirmation');
+    };
+  }, [socket, isConnected]);
+
+
+
   // Handle key down events for input
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -617,6 +664,7 @@ export const Terminal: React.FC<TerminalProps> = ({
       }
 
       if (e.key === "Escape") {
+        e.preventDefault();
         setShowDirectoryList(false);
         setShowHistory(false);
         return;
@@ -678,51 +726,103 @@ export const Terminal: React.FC<TerminalProps> = ({
             const isSudoPassword = getIsSudoPassword(tabId);
 
             const isContext = selectedContext.length > 0;
+            const sessionToken = localStorage.getItem('session_token');
             if (
-              finalCommand === "clear" &&
+              finalCommand === "clear" && !prompt && 
               (platform === "Linux" || platform === "MacOS")
             ) {
               clearTerminalData(tabId, terminalId);
               setInputValue("");
               setSuggestion("");
               return;
-            } else if (finalCommand === "cls" && platform === "Windows") {
+            } else if (finalCommand === "cls" && !prompt && platform === "Windows") {
               clearTerminalData(tabId, terminalId);
               setInputValue("");
               setSuggestion("");
               return;
             }
-            if (commandToExecute.startsWith("sudo ") && !isSudoPassword) {
-              setIsPasswordPromptOpen(true);
-              setPreviousCmd(finalCommand);
-              setInputValue("");
-              setHistoryIndex(-1);
-              setSuggestion("");
-              setShowHistory(false);
-              return;
-            }
-            if (isInteractiveMode) {
-              handleInteractiveInput(finalCommand);
-            }
+
+            // if (commandToExecute.startsWith("sudo ") && !isSudoPassword) {
+            //   setIsPasswordPromptOpen(true);
+            //   setPreviousCmd(finalCommand);
+            //   setInputValue("");
+            //   setHistoryIndex(-1);
+            //   setSuggestion("");
+            //   setShowHistory(false);
+            //   return;
+            // }
+            // if (isInteractiveMode) {
+            //   handleInteractiveInput(finalCommand);
+            // }
+
 
             if (isPasswordPromptOpen) {
               setIsPasswordPromptOpen(false);
-              socket.emit("exec", {
+              // setSudoPassword(finalCommand);
+              socket.emit('password_response', {
                 terminal_id: terminalId,
-                input: previousCmd,
-                sudoPassword: finalCommand,
+                password: finalCommand,
               });
               setIsSudoCommandExecuting(true);
-              setIsLoading(true);
+              setIsLoading(false);
+              if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current);
+              }
               setShowHistory(false);
               setInputValue("");
               setHistoryIndex(-1);
               setSuggestion("");
               return;
-            } else {
-              if (commandToExecute.startsWith("sudo ")) {
+
+
+            }
+
+            if (isConfirmationPromptOpen) {
+              setIsConfirmationPromptOpen(false);
+              socket.emit('confirmation_response', {
+                terminal_id: terminalId,
+                response: finalCommand.trim().toLowerCase(),
+              });
+              // setIsSudoCommandExecuting(true);
+              setIsLoading(false);
+              if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current);
+              }
+              setShowHistory(false);
+              setInputValue("");
+              setHistoryIndex(-1);
+              setSuggestion("");
+              // setIsAiThinking(false);
+              
+              return;
+            }
+
+            if (finalCommand == 'htop' || finalCommand == "top") {
+              socket.emit("exec", {
+                terminal_id: terminalId,
+                input: finalCommand,
+                isTerminal: true,
+              })
+              setHtopSession(true);
+              setShowHistory(false);
+              setTerminalHistory((prev) => [...prev, input]);
+              setInputValue("");
+              setHistoryIndex(-1);
+              setSuggestion("");
+              return
+            }
+            else {
+              if (commandToExecute.startsWith("sudo ") && isSudoPassword) {
                 setIsSudoCommandExecuting(true);
               }
+
+              loadingTimeoutRef.current = setTimeout(() => {
+                setIsLoading(true);
+              }, 2000);
+
+              clearOutputTimeoutRef.current = setTimeout(() => {
+                setIsLoading(false); // Clear the output after 20 seconds if no response
+              }, 240000);
 
               socket.emit("exec", {
                 terminal_id: terminalId,
@@ -735,10 +835,19 @@ export const Terminal: React.FC<TerminalProps> = ({
                 isTerminal: true,
                 lastTerminalMessages: lastMessages,
                 context: isContext ? contextContent : undefined,
+                user_session: sessionToken
               });
             }
-            setIsLoading(true);
-            setIsAiThinking(true);
+
+
+            // setIsLoading(true);
+            if (prompt) {
+              setIsAiThinking(true);
+              setIsLoading(false);
+              if (loadingTimeoutRef.current) {
+                clearTimeout(loadingTimeoutRef.current); // Clear the loading timeout
+              }
+            }
             socket.emit("getCurrentDirectory", { terminal_id: terminalId });
             setShowHistory(false);
             setTerminalHistory((prev) => [...prev, input]);
@@ -829,6 +938,12 @@ export const Terminal: React.FC<TerminalProps> = ({
       terminal_id: string;
     }) => {
       if (data.terminal_id === terminalId) {
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current); // Clear timeout when response is received
+        }
+        if (clearOutputTimeoutRef.current) {
+          clearTimeout(clearOutputTimeoutRef.current); // Clear the output timeout
+        }
         setIsLoading(false);
         setIsSudoCommandExecuting(false);
         setIsAiThinking(false);
@@ -999,8 +1114,13 @@ export const Terminal: React.FC<TerminalProps> = ({
   // Handle creation of copy value
   const onCopyCode = () => { };
 
+  console.log("isLoading", isLoading)
+
   return (
     <>
+      {htopSession && socket && isConnected && (
+        <HtopTerminal socket={socket} isConnected={isConnected} setHtopSession={setHtopSession} />
+      )}
       <div className="custom-flex-grow-for-message-container flex pb-10 w-full h-full hide-scrollbar">
         {isAiThinking && prompt && (
           <div className="absolute bottom-11 left-4 right-0 bg-[--bgColor] p-2">
@@ -1015,9 +1135,18 @@ export const Terminal: React.FC<TerminalProps> = ({
           <div className="absolute bottom-11 left-4 right-0 bg-[--bgColor] p-2">
             <div className="flex items-center">
               <FiLoader className="animate-spin mr-2" />
-              <span>installing packages</span>
+              <span>Installing packages</span>
             </div>
           </div>
+        )}
+
+        {isLoading && (
+          <div className="absolute bottom-11 left-4 right-0 bg-[--bgColor] p-2">
+          <div className="flex items-center">
+            <FiLoader className="animate-spin mr-2" />
+            <span>Executing command</span>
+          </div>
+        </div>
         )}
 
         <div
@@ -1057,6 +1186,7 @@ export const Terminal: React.FC<TerminalProps> = ({
                   }
                   ${index === 0 && isAiThinking ? "mb-12" : ""}
                   ${index === 0 && isSudoCommandExecuting ? "mb-12" : ""}
+                  ${index === 0 && isLoading ? "mb-12" : ""}
       `}
                 onDoubleClick={() => {
                   if (prompt) {
@@ -1152,8 +1282,8 @@ export const Terminal: React.FC<TerminalProps> = ({
         </div>
       </div>
       <div
-        className={`absolute z-10 bottom-0 h-10 text-[--textColor] p-2 custom-font-size leading-relaxed font-mono w-full bg-[--bgColor] border-t border-[--borderColor] ${prompt ? "border border-yellow-400" : ""
-          }`}
+        className={`absolute z-10 bottom-0 h-10 text-[--textColor] p-2 custom-font-size leading-relaxed font-mono w-full bg-[--bgColor] border-t border-[--borderColor] ${prompt ? "border border-[--yellowColor]" : ""
+          } ${htopSession ? "hidden" : ""}`}
       >
         <div
           ref={historyRef}
@@ -1168,14 +1298,14 @@ export const Terminal: React.FC<TerminalProps> = ({
                 <div
                   key={index}
                   className={`rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2 ${historyIndex === terminalHistory.length - 1 - index
-                      ? "bg-gradient-to-br from-[--blueColor] to-[--darkBlueColor] text-[--textColor]"
-                      : ""
+                    ? "bg-gradient-to-br from-[--blueColor] to-[--darkBlueColor] text-[--textColor]"
+                    : ""
                     }`}
                 >
                   <div
                     className={`p-1 ${historyIndex === terminalHistory.length - 1 - index
-                        ? "text-[--textColor]"
-                        : "text-[--primaryTextColor]"
+                      ? "text-[--textColor]"
+                      : "text-[--primaryTextColor]"
                       }`}
                   >
                     <h3 className="custom-font-size font-normal">{line}</h3>
@@ -1183,7 +1313,7 @@ export const Terminal: React.FC<TerminalProps> = ({
                 </div>
               ))
           ) : (
-            <div className="bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2">
+            <div className="bg-gradient-to-br from-[--scrollbarThumbColor] to-[--scrollbarTrackColor] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-2">
               <div className="p-1 text-[--textColor]">
                 <h3 className="custom-font-size font-normal">
                   No Record Found
@@ -1194,15 +1324,16 @@ export const Terminal: React.FC<TerminalProps> = ({
         </div>
         <div className="flex items-center w-full overflow-hidden">
           <div className={`text-transparent bg-clip-text bg-gradient-to-r from-[--promptColorGradientStart] to-[--promptColorGradientEnd] `}>
-        {isPasswordPromptOpen
-          ? "Please enter your password:"
-          : isCreatingFile
-            ? filePromptLabel
-            : promptLabel}
-      </div>
-      {!isPasswordPromptOpen && !isCreatingFile && promptLabel.startsWith("starting bash") && (
-          <CircularLoader />
-      )}
+            {isPasswordPromptOpen
+              ? "Please enter your password:"
+              : isConfirmationPromptOpen ? "Do you want to continue? (y/n):"
+                : isCreatingFile
+                  ? filePromptLabel
+                  : promptLabel}
+          </div>
+          {!isPasswordPromptOpen && !isCreatingFile && promptLabel.startsWith("starting bash") && (
+            <CircularLoader />
+          )}
           <div className="relative flex-1 ml-4 flex items-center text-[--textColor]">
             <div className="relative w-full">
               {isPasswordPromptOpen ? (
@@ -1217,13 +1348,16 @@ export const Terminal: React.FC<TerminalProps> = ({
                   aria-label="Password input"
                   placeholder="Enter password"
                 />
-              ) : isInteractiveMode ? (
-                <button
-                  onClick={handleF10Click}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  F10 (Close)
-                </button>
+              ) : isConfirmationPromptOpen ? (
+                <input
+                  type="text"
+                  value={input}
+                  onKeyDown={handleInputKeyDown}
+                  onChange={handleInputChange}
+                  ref={inputRef}
+                  className="flex-1 bg-transparent text-[--textColor] border-0 outline-none custom-font-size leading-relaxed font-mono w-full "
+                  placeholder="Enter Your Choice"
+                />
               ) : (
                 <input
                   type="text"
@@ -1248,8 +1382,8 @@ export const Terminal: React.FC<TerminalProps> = ({
                     <div
                       key={dir.name}
                       className={`flex items-center gap-2 px-4 py-2 cursor-pointer ${index === selectedIndex
-                          ? "bg-pink-500 text-[--textColor]"
-                          : "hover:bg-zinc-700"
+                        ? "bg-pink-500 text-[--textColor]"
+                        : "hover:bg-zinc-700"
                         }`}
                       onClick={() => {
                         setInputValue(`cd ${dir.name}`);
@@ -1268,10 +1402,15 @@ export const Terminal: React.FC<TerminalProps> = ({
 
               {suggestion && (
                 <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                  <span className="text-[--textColor]">{input}</span>
-                  <span className="text-[--commentColor]">
-                    {suggestion.slice(input.length)}
-                  </span>
+                  {
+                    !isPasswordPromptOpen && (
+                      <>
+                        <span className="text-[--textColor]">{input}</span>
+                        <span className="text-[--commentColor]">
+                          {suggestion.slice(input.length)}
+                        </span></>
+                    )
+                  }
                 </div>
               )}
             </div>

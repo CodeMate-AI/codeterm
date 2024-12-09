@@ -324,7 +324,7 @@ const SplitPane: React.FC<{
       {!isRootLevel && !isLastPane && (
         <div
           ref={dragHandleRef}
-          className="absolute top-0 right-0 bottom-0 w-1 bg-gray-300 cursor-col-resize"
+          className="absolute top-0 right-0 bottom-0 w-1 bg-[--iconColor] cursor-col-resize"
           onMouseDown={handleMouseDown}
         />
       )}

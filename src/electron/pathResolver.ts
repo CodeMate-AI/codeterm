@@ -21,6 +21,3 @@ export function getAssetPath() {
   return path.join(app.getAppPath(), isDev() ? "." : "..", "/src/assets");
 }
 
-export function getPreviewPath() {
-  return path.join(app.getAppPath(), "/dist-react/preview.html");
-}

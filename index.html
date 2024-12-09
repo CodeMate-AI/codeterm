@@ -1,49 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" class="codemate-ai-dark-theme">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; 
-           style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
-           script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com; 
-           connect-src 'self' http://127.0.0.1:5000 ws://127.0.0.1:5000 https://www.google-analytics.com; 
-           img-src 'self' data:;"
-    />
-    
-    <title>CodeTerm</title>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
+    script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com; 
+    connect-src 'self' http://127.0.0.1:5000 ws://127.0.0.1:5000 https://www.google-analytics.com https://api.identity.codemate.ai; 
+    img-src 'self' data:;" />
 
 
-    <!-- Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-93DKE8SRB8"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-93DKE8SRB8");
-    </script>
+  <title>CodeTerm</title>
 
-    <!-- Include React and ReactDOM from CDN -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Tailwind CSS CDN for styling -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-93DKE8SRB8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-93DKE8SRB8");
+  </script>
 
-    <!-- Add your custom JavaScript, this will be compiled with TypeScript in your build process -->
-    <script type="module" src="/src/ui/index.tsx"></script>
-  </body>
+  <!-- Include React and ReactDOM from CDN -->
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind CSS CDN for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Add your custom JavaScript, this will be compiled with TypeScript in your build process -->
+  <script type="module" src="/src/ui/index.tsx"></script>
+</body>
+
 </html>
