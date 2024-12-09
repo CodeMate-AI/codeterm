@@ -135,8 +135,7 @@ export default function LLMModelTab({ socket, isConnected }: LLMModelProps) {
     null
   );
 
-  const [isSelected, setIsSelected] = useState(null);
-
+  const [isSelected, setIsSelected] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -173,6 +172,13 @@ export default function LLMModelTab({ socket, isConnected }: LLMModelProps) {
     setIsAuthenticated(!!localStorage.getItem('session_token'));
   }, []);
 
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem("selected");
+    if (storedValue) {
+      setIsSelected(storedValue === 'true');
+    }
+  }, []);
 
   const handleProviderChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -330,15 +336,42 @@ export default function LLMModelTab({ socket, isConnected }: LLMModelProps) {
   }, []);
 
 
-  useEffect(() => {
-    const storedValue = localStorage.getItem("selected");
-    setIsSelected(storedValue);
-  }, []);
-
 
   const updateIsSelected = (newValue) => {
     setIsSelected(newValue);
   };
+
+
+const renderCurrentModelDetails = () => {
+  if (isLoading) {
+    return <p>Loading current model...</p>;  // Show loading state until model is set
+  }
+
+  if (currentModel) {
+    // Render the model details when it is set
+    if (isSelected) {
+      return (
+        <div className="w-full bg-[--bgColor] border border-[--borderColor] rounded-lg p-4 mt-4">
+          <div className="space-y-4">
+            <p className="text-xl text-center text-[--secondaryTextColor]">
+              Using CodeMate.ai for Advanced Code Assistance
+            </p>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <CurrentModelDetails
+          provider={currentModel.id.provider}
+          name={currentModel.id.name}
+          params={currentModel.params}
+        />
+      );
+    }
+  }
+
+  return <p>No current model selected.</p>;  // Render a fallback message if model is null
+};
 
 
   return (
@@ -442,25 +475,7 @@ export default function LLMModelTab({ socket, isConnected }: LLMModelProps) {
       </form>
 
 
-      {
-        isSelected ? (
-          <div className="w-full bg-[--bgColor] border border-[--borderColor] rounded-lg p-4 mt-4">
-            <div className="space-y-4">
-              <p className="text-xl text-center text-[--secondaryTextColor]">
-                Using CodeMate.ai for Advanced Code Assistance
-              </p>
-            </div>
-          </div>
-        ) : (
-          currentModel?.id && currentModel?.params && (
-            <CurrentModelDetails
-              provider={currentModel.id.provider}
-              name={currentModel.id.name}
-              params={currentModel.params}
-            />
-          )
-        )
-      }
+      {renderCurrentModelDetails()}
 
       {successMessage && (
         <div className="mt-4 text-green-500 text-center">{successMessage}</div>
