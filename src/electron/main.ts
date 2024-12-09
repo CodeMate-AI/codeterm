@@ -43,7 +43,7 @@ function createWindow() {
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
 
-      pythonServer();
+    pythonServer();
 
   if (!isDev()) {
     mainWindow.webContents.once("did-finish-load", () => {
@@ -294,9 +294,9 @@ function pythonServer() {
 
   pythonProcess = spawn(backendExecutablePath, [], { shell: true, env });
 
-  pythonProcess.stdout.on("data", (data) => {});
+  pythonProcess.stdout.on("data", (data) => { });
 
-  pythonProcess.stderr.on("data", (data) => {});
+  pythonProcess.stderr.on("data", (data) => { });
 }
 
 // Ensure localStorage is cleared when app is closed or quitting

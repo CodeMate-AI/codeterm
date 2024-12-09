@@ -68,7 +68,7 @@ export function AITab({ socket, isConnected }: AITabProps) {
         <div className="space-y-8">
           <div className="space-y-2">
             <h2 className="text-[--secondaryTextColor] text-sm">Request Usage</h2>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-1">
               <p className="text-sm text-[--secondaryTextColor]">
                 This is the monthly limit of AI requests for your account.{" "}
                 <button className="text-[--darkBlueColor] hover:underline" onClick={() => window.electron.openExternalLink("https://codemate.ai/#pricing")}>
@@ -76,7 +76,7 @@ export function AITab({ socket, isConnected }: AITabProps) {
                 </button>
                 {" "}to get more requests.
               </p>
-              <div className="text-right">
+              <div className="text-right flex-none w-1/4">
                 {/* Dynamic display of current usage, total limit, and remaining requests */}
                 <p className="text-sm font-medium">{rateLimitData.remaining}/{rateLimitData.total}</p>
                 {/* <p className="text-xs text-[#8F8F8F]">Resets {rateLimitData.resetTime}</p> */}

@@ -728,7 +728,7 @@ export const Terminal: React.FC<TerminalProps> = ({
             const isContext = selectedContext.length > 0;
             const sessionToken = localStorage.getItem('session_token');
             if (
-              finalCommand === "clear" && !prompt && 
+              finalCommand === "clear" && !prompt &&
               (platform === "Linux" || platform === "MacOS")
             ) {
               clearTerminalData(tabId, terminalId);
@@ -793,7 +793,7 @@ export const Terminal: React.FC<TerminalProps> = ({
               setHistoryIndex(-1);
               setSuggestion("");
               // setIsAiThinking(false);
-              
+
               return;
             }
 
@@ -838,16 +838,14 @@ export const Terminal: React.FC<TerminalProps> = ({
                 user_session: sessionToken
               });
             }
-
-
-            // setIsLoading(true);
-            if (prompt) {
+            if (prompt && finalCommand.includes('sudo')) {
               setIsAiThinking(true);
               setIsLoading(false);
               if (loadingTimeoutRef.current) {
-                clearTimeout(loadingTimeoutRef.current); // Clear the loading timeout
+                clearTimeout(loadingTimeoutRef.current);
               }
             }
+
             socket.emit("getCurrentDirectory", { terminal_id: terminalId });
             setShowHistory(false);
             setTerminalHistory((prev) => [...prev, input]);
@@ -1141,11 +1139,11 @@ export const Terminal: React.FC<TerminalProps> = ({
 
         {isLoading && (
           <div className="absolute bottom-11 left-4 right-0 bg-[--bgColor] p-2">
-          <div className="flex items-center">
-            <FiLoader className="animate-spin mr-2" />
-            <span>Executing command</span>
+            <div className="flex items-center">
+              <FiLoader className="animate-spin mr-2" />
+              <span>Executing command</span>
+            </div>
           </div>
-        </div>
         )}
 
         <div

@@ -78,10 +78,7 @@ export function AccountTab({ socket, isConnected, sendMessage }: AccountTabProps
   };
 
   const handleLogin = () => {
-    // Redirect the user to the authentication page
-    const callbackUrl = 'http://localhost:5000'; // This should be your callback URL
-    // window.location.href = `https://identity.codemate.ai?app=${encodeURIComponent(callbackUrl)}`;
-    handleAction(`https://identity.codemate.ai?app=${encodeURIComponent(callbackUrl)}`)
+    handleAction(`https://auth.codemate.ai/?run=connect&host=cli`)
   };
 
 
@@ -144,6 +141,7 @@ export function AccountTab({ socket, isConnected, sendMessage }: AccountTabProps
           <Avatar
             fallback={user?.name?.[0] || "AI"}
             size="lg"
+            src={user?.image}
           />
           <div className="flex-1">
             <div className="flex items-center justify-between">
@@ -155,7 +153,7 @@ export function AccountTab({ socket, isConnected, sendMessage }: AccountTabProps
                 isAuthenticated && (
                   <div className="flex items-center space-x-3">
                     <span className="px-2 py-0.5 bg-[--scrollbarTrackColor] text-[--grayColor] text-xs rounded">
-                      {user?.display_name || "HOBBY"}
+                      {user?.plan || "Free Plan"}
                     </span>
                     <button className="text-[--darkBlueColorGradientStart] text-sm hover:underline" onClick={() => window.electron.openExternalLink("https://codemate.ai/#pricing")}>
                       Compare plans
@@ -206,13 +204,5 @@ export function AccountTab({ socket, isConnected, sendMessage }: AccountTabProps
         }
       </div>
     </div>
-
-
-
-
-
-
-
-
   );
 }
