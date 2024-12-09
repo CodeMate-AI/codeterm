@@ -1114,7 +1114,6 @@ export const Terminal: React.FC<TerminalProps> = ({
   // Handle creation of copy value
   const onCopyCode = () => { };
 
-  console.log("isLoading", isLoading)
 
   return (
     <>
