@@ -838,7 +838,7 @@ export const Terminal: React.FC<TerminalProps> = ({
                 user_session: sessionToken
               });
             }
-            if (prompt && finalCommand.includes('sudo')) {
+            if (prompt || finalCommand.includes('sudo')) {
               setIsAiThinking(true);
               setIsLoading(false);
               if (loadingTimeoutRef.current) {
@@ -924,6 +924,7 @@ export const Terminal: React.FC<TerminalProps> = ({
     ]
   );
 
+
   // Handle socket events for command output and suggestions
   useEffect(() => {
     if (!socket || !isConnected) return;
@@ -984,6 +985,10 @@ export const Terminal: React.FC<TerminalProps> = ({
       output: string;
     }) => {
       if (data.terminal_id === terminalId) {
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
+        }
+        setIsLoading(false);
         setIsAiThinking(false);
 
         let cleanedOutput = data.output.trim();

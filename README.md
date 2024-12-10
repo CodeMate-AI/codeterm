@@ -84,7 +84,21 @@ Tnstall the required dependencies by running the command:
 npm install
 ```
 
-3. **Usage**:
+3. **Grant executable permissions to the backend executable file:**
+
+```sh
+cd backend/dist/linux/
+```
+
+```sh
+chmod +x ./mainSave
+```
+
+```sh
+cd ../../../
+```
+
+4. **Usage**:
 
 To run CodeTerm in development mode, use the following command:
 
@@ -96,11 +110,32 @@ npm run dev
 ## Getting Started For Production
 
 ### For Ubuntu Users:
-Ubuntu users can directly proceed with installing and running the application without any additional configuration.
+You can choose between the .deb package or the .AppImage package to install and run the application.
 
 
+#### Option 1: Using the .deb Package
+
+1. **Install the .deb package** by double-clicking the file or using the following command in the terminal:
+```sh
+sudo dpkg -i path/to/CodeTerm_0.0.1_amd64.deb
+```
+2. After installation, you can simply launch the application from your applications menu or by typing the application name in the terminal.
 
 
+#### Option 2: Using the .AppImage Package
+
+1. **Navigate to the directory** where the .AppImage was downloaded:
+```sh
+cd /path/to/downloaded/file
+```
+2. **Make the AppImage executable** with the following command:
+```sh
+chmod +x ./CodeTerm-0.0.1.AppImage
+```
+3. **Run the application** by executing:
+```sh
+./CodeTerm-0.0.1.AppImage
+```
 
 
 ### For macOS Users:
