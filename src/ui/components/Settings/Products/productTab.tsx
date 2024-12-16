@@ -44,7 +44,6 @@ export const ProductTab: React.FC<ProductTabProps> = ({ products }) => {
     window.electron
       .openExternalLink(url)
       .then((response) => {
-        console.log("URL opened successfully:", response);
       })
       .catch((error) => {
         console.error("Error opening URL:", error);
@@ -53,6 +52,7 @@ export const ProductTab: React.FC<ProductTabProps> = ({ products }) => {
 
   return (
     <div className="overflow-y-auto w-3/4 p-4 max-h-[552px] hide-scrollbar text-[--textColor]">
+      <h1 className="text-2xl font-semibold mb-6">Products</h1>
       {products.map((product, index) => (
         <div
           key={index}

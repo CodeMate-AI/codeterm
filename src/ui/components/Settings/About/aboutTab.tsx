@@ -14,6 +14,7 @@ export function AboutTab() {
 
   return (
     <div className="overflow-y-auto w-3/4 p-4 max-h-[552px] hide-scrollbar text-[--textColor]">
+      <h1 className="text-2xl font-semibold mb-6">About</h1>
       <div className="flex items-center justify-center h-full">
         <div>
           <img src={logoImage} alt="codemate.ai-logo" className="mb-3 h-20" />

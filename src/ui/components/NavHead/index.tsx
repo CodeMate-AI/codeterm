@@ -57,6 +57,10 @@ const NavHead: React.FC<NavHeadProps> = ({
   const handleTabRemove = (id: string, event: React.MouseEvent) => {
     event.stopPropagation();
     onTabRemove(id);
+
+    // if(socket && isConnected){
+    //   socket.emit('terminate_session', { terminal_id: id });
+    // }
   };
 
   const [sections, setSections] = useState<Section[]>([
@@ -303,7 +307,7 @@ const NavHead: React.FC<NavHeadProps> = ({
         {tabs.map((tab) => (
           <div
             key={tab.id}
-            className={`flex text-center text-[--textColor] hover:bg-[--darkGrayColor] transition-colors cursor-pointer h-9 items-center bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] px-3 py-1 w-40 isolate  bg-white/20 shadow-lg ring-1 ring-black/5 ${
+            className={`flex text-center text-[--textColor] hover:bg-[--darkGrayColor] transition-colors cursor-pointer h-9 items-center bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] px-3 py-1 w-40 isolate  bg-[--grayColor] shadow-lg ring-1 ring-[--shadowColor] ${
               tab.id === activeTabId
                 ? "relative bg-[--selectionBackgroundColor] font-medium border-b-2 border-gradient hide-scrollbar "
                 : ""
@@ -432,7 +436,7 @@ const NavHead: React.FC<NavHeadProps> = ({
 
           <div className="p-4">
             <div className="custom-font-size text-[--textColor] mb-4">
-              v0.2024.09.03.08.02.stable_03
+              v0.0.1
             </div>
 
             <div className="flex justify-between custom-font-size text-[--textColor]">

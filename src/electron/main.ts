@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog, shell } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, shell, protocol } from "electron";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -7,7 +7,6 @@ import { isDev } from "./utils.js";
 import { getPreloadPath } from "./pathResolver.js";
 import { spawn } from "child_process";
 import dotenv from "dotenv";
-// import {updateElectronApp} from "update-electron-app"
 import pkg from "electron-updater";
 
 const { autoUpdater } = pkg;
@@ -44,7 +43,7 @@ function createWindow() {
     mainWindow.loadFile(path.join(app.getAppPath(), "/dist-react/index.html"));
   }
 
-  pythonServer();
+    pythonServer();
 
   if (!isDev()) {
     mainWindow.webContents.once("did-finish-load", () => {
@@ -59,14 +58,6 @@ function checkForUpdates() {
   autoUpdater.checkForUpdatesAndNotify();
 }
 
-// autoUpdater.on("update-not-available", () => {
-//   dialog.showMessageBoxSync({
-//     type: "info",
-//     buttons: ["OK"],
-//     title: "No Updates",
-//     message: "Your application is up to date.",
-//   });
-// });
 
 autoUpdater.on("update-available", () => {
   // Show a message box to ask the user if they want to download the update
@@ -233,7 +224,24 @@ ipcMain.handle(
   }
 );
 
-app.whenReady().then(createWindow);
+// app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  protocol.registerHttpProtocol("codeTerm", (request, callback) => {
+    const url = new URL(request.url);
+
+
+    // Handle the custom protocol path
+    if (url.pathname === "/logged_in") {
+      // Focus or show the Electron window when the user visits `myapp://logged_in`
+      if (mainWindow) {
+        mainWindow.show();
+        mainWindow.focus();
+      }
+    }
+  });
+
+  createWindow(); // Create the window
+});
 
 function pythonServer() {
   let backendExecutablePath;
@@ -286,9 +294,9 @@ function pythonServer() {
 
   pythonProcess = spawn(backendExecutablePath, [], { shell: true, env });
 
-  pythonProcess.stdout.on("data", (data) => {});
+  pythonProcess.stdout.on("data", (data) => { });
 
-  pythonProcess.stderr.on("data", (data) => {});
+  pythonProcess.stderr.on("data", (data) => { });
 }
 
 // Ensure localStorage is cleared when app is closed or quitting
