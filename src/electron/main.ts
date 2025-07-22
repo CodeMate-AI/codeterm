@@ -260,7 +260,7 @@ function pythonServer() {
     } else {
       backendExecutablePath = path.join(
         __dirname,
-        "../backend/dist/linux/mainSave"
+        "../backend/dist/linux/mainSave/mainSave"
       );
     }
   } else {
@@ -283,6 +283,7 @@ function pythonServer() {
         app.getAppPath(),
         "..",
         "backend",
+        "mainSave",
         "mainSave"
       );
     }

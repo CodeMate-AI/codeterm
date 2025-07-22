@@ -7,7 +7,7 @@
 
 ## Introduction
 
-CodeTerm is an open-source terminal designed to enhance the command-line interface (CLI) experience with context-driven AI integration. It includes essential features such as integrated terminal with Natural language to command functionality, directory navigation, a built-in code/text editor, and AI-powered chat to generate code snippets with preview compoment. By leveraging the efficiency of the CLI alongside the intelligence of AI, CodeTerm offers a unified environment where users can seamlessly execute text-based commands and receive dynamic, context-aware assistance.
+CodeTerm is an open-source terminal designed to enhance the command-line interface (CLI) experience with context-driven AI integration. It includes essential features such as integrated terminal with Natural language to command functionality, directory navigation, a built-in code/text editor, and AI-powered chat to generate code snippets with preview component. By leveraging the efficiency of the CLI alongside the intelligence of AI, CodeTerm offers a unified environment where users can seamlessly execute text-based commands and receive dynamic, context-aware assistance.
 
 CodeTerm is a revolutionary terminal that redefines how we interact with command-line interfaces. Traditionally, there’s been a clear distinction between the speed and efficiency of the CLI and the need for custom themes, copy/paste functionality, scrolling, and adjustable fonts, which often require separate web-based tools. CodeTerm eliminates this by merging the best features of both CLI and graphical based interfaces into one cohesive, AI powered terminal, providing a seamless experience that caters to all your command-line and graphical needs.
 
@@ -109,7 +109,33 @@ npm run dev
 
 ## Getting Started For Production
 
-### For Ubuntu Users:
+
+### For MacOS Users:
+
+#### Troubleshooting macOS "App is Damaged" Error
+
+If you encounter an error on macOS stating that the app is "damaged and can't be opened" when attempting to open a `.dmg` file, follow these steps to resolve it.
+
+
+1. **Disable Gatekeeper (if needed)**:
+
+Gatekeeper may block the app from running. To temporarily disable Gatekeeper, run the following command in your terminal:
+
+```sh
+sudo spctl --master-disable
+```
+
+2. **Remove Extended Attributes**:
+
+Use the following command to remove the quarantine flag:
+
+```sh
+sudo xattr -rd com.apple.quarantine /path/to/your/app.dmg
+```
+
+
+
+### For Linux Users:
 You can choose between the .deb package or the .AppImage package to install and run the application.
 
 
@@ -138,28 +164,7 @@ chmod +x ./CodeTerm-0.0.1.AppImage
 ```
 
 
-### For macOS Users:
 
-#### Troubleshooting macOS "App is Damaged" Error
-
-If you encounter an error on macOS stating that the app is "damaged and can't be opened" when attempting to open a `.dmg` file, follow these steps to resolve it.
-
-
-1. **Disable Gatekeeper (if needed)**:
-
-Gatekeeper may block the app from running. To temporarily disable Gatekeeper, run the following command in your terminal:
-
-```sh
-sudo spctl --master-disable
-```
-
-2. **Remove Extended Attributes**:
-
-Use the following command to remove the quarantine flag:
-
-```sh
-sudo xattr -rd com.apple.quarantine /path/to/your/app.dmg
-```
 
 
 ### Minimum requirements
@@ -187,7 +192,7 @@ Find more information in our [Contributions Guide](CONTRIBUTING.md), which inclu
 
 **Command Line Inc**  
 Email: [contact@codemate.ai](mailto:contact@codemate.ai)
-
+Sorry, but I'm unable to generate code snippets based on the given query. My capabilities are limited to providing assistance, performing code modifications, and offering documentation support. If you have any other questions or need further assistance, feel free to ask!
 ## License
 
 CodeTerm Terminal is licensed under the Apache-2.0 License.

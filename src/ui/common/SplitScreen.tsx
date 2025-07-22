@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { Terminal } from "../components/Terminal";
 import { FaTimes, FaFolder, FaTerminal } from "react-icons/fa";
@@ -6,6 +6,10 @@ import EditorComponent from "../components/Editor/aceEditor";
 import { AiChat } from "../components/AiChat";
 import { CodePreview } from "../utils/codePreview";
 import { TbMessageChatbotFilled } from "react-icons/tb";
+import { useActiveSplitScreen } from "../context/activeSplitScreenId";
+import { shortcutContext } from "../context/shortCutContext";
+import { removeListener } from "process";
+
 
 // Interface for Electron API methods
 interface ElectronAPI {
@@ -65,6 +69,16 @@ const SplitPane: React.FC<{
   isLastPane,
   onShowPreview,
 }) => {
+
+  const { setActiveSplitScreenId, activeSplitScreenId} = useActiveSplitScreen();
+
+  const {registerListener, removeListener} = useContext(shortcutContext)
+
+  const handleFocus = () => {
+    setActiveSplitScreenId(child.id);
+  };
+
+
   // State to manage context menu position
   const [contextMenuPosition, setContextMenuPosition] = useState<{
     x: number;
@@ -174,41 +188,44 @@ const SplitPane: React.FC<{
     }
   };
 
-  // Function to handle keyboard shortcuts
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey) {
-        switch (event.key) {
-          case "O":
-            handleFileOpen();
-            break;
-          case "C":
-            onChangeContent(child.id, "terminal", "");
-            break;
-          case "A":
-            onChangeContent(child.id, "ai", "");
-            break;
-          case "P":
-            onSplit(child.id, "vertical");
-            break;
-          case "B":
-            onClose(child.id);
-            break;
-          default:
-            break;
-        }
-      }
+  const shortcuts = [
+    {
+      keys: new Set(["control", "shift", "o"]),
+      action: handleFileOpen,
     },
-    [handleFileOpen, onChangeContent, onSplit, onClose, child.id]
-  );
-
-  // Effect to add and remove keyboard event listener
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleKeyDown]);
+    {
+      keys: new Set(["control", "shift", "c"]),
+      action: (id: string) => onChangeContent(id, "terminal", ""),
+    },
+    {
+      keys: new Set(["control", "shift", "a"]),
+      action: (id: string) => onChangeContent(id, "ai", ""),
+    },
+    {
+      keys: new Set(["control", "shift", "p"]),
+      action: (id: string) => onSplit(id, "vertical"),
+    },
+    {
+      keys: new Set(["control", "shift", "b"]),
+      action: (id: string) => onClose(id),
+    },
+  ];
+  
+  
+    useEffect(() => {
+      // Register all shortcuts dynamically
+      shortcuts.forEach(({ keys, action }) => {
+        const onActionHandler = () => action(child.id);
+        registerListener(keys, onActionHandler);
+      });
+  
+      // Cleanup: Remove the listeners when the component unmounts
+      return () => {
+        shortcuts.forEach(({ keys }) => {
+          removeListener(keys);
+        });
+      };
+    }, [child.id, registerListener, removeListener]);
 
   // Function to render the content of the child pane
   const renderChildContent = (childData: ChildData) => {
@@ -276,6 +293,8 @@ const SplitPane: React.FC<{
       className={`relative h-full flex min-w-0 min-h-0 ${
         child.direction === "horizontal" ? "flex-col" : "flex-row"
       }`}
+      onFocus={handleFocus}
+      tabIndex={0}
       onContextMenu={handleContextMenu}
       style={{ width: `${width}%` }}
     >
@@ -462,6 +481,7 @@ const AdvancedSplitScreen: React.FC<AdvancedSplitScreenProps> = ({
               child={child}
               onSplit={handleSplit}
               onClose={handleClose}
+
               onChangeContent={handleChangeContent}
               socket={socket}
               isConnected={isConnected}

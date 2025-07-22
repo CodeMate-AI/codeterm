@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import SettingsModal from "../Settings/Model/settingModel";
 import { FaTimes } from "react-icons/fa";
@@ -11,6 +11,7 @@ import {
   FiMessageCircle,
 } from "react-icons/fi";
 import { Socket } from "socket.io-client";
+import { shortcutContext } from "../../context/shortCutContext";
 
 interface Section {
   title: string;
@@ -47,6 +48,7 @@ const NavHead: React.FC<NavHeadProps> = ({
   sendMessage,
   updateTabName,
 }) => {
+  const {registerListener, removeListener} = useContext(shortcutContext)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hoveredTabId, setHoveredTabId] = useState<string | null>(null);
 
@@ -187,8 +189,11 @@ const NavHead: React.FC<NavHeadProps> = ({
   const [newTabName, setNewTabName] = useState("");
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "F2" && activeTabId) {
+    const keys = new Set(["f2"]);
+  
+    // Define the action for F2 key press
+    const handleKeyPress = () => {
+      if (activeTabId) {
         setEditingTabId(activeTabId);
         const activeTab = tabs.find((tab) => tab.id === activeTabId);
         if (activeTab) {
@@ -197,12 +202,16 @@ const NavHead: React.FC<NavHeadProps> = ({
         setIsEditing(true);
       }
     };
-
-    window.addEventListener("keydown", handleKeyDown);
+  
+    // Register the listener for the F2 key combination
+    registerListener(keys, handleKeyPress);
+  
+    // Cleanup: Remove the listener when the component unmounts or dependencies change
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      removeListener(keys);
     };
-  }, [activeTabId, tabs]);
+  }, [activeTabId, tabs, registerListener, removeListener]);
+  
 
   const handleTabDoubleClick = (tabId: string) => {
     // Trigger the same behavior as F2 or double-click to start editing
@@ -251,6 +260,54 @@ const NavHead: React.FC<NavHeadProps> = ({
   const hideHoverInfo = () => {
     setHoverInfo({ ...hoverInfo, show: false });
   };
+
+
+  const shortcuts = [
+    {
+      keys: new Set(["control", "d"]),
+      action: (event: KeyboardEvent, activeTabId: string, onTabRemove: Function) => {
+        event.preventDefault();
+        onTabRemove(activeTabId);
+      },
+    },
+    {
+      keys: new Set(["control", ","]),
+      action: (event: KeyboardEvent, setIsModalOpen: Function) => {
+        event.preventDefault();
+        setIsModalOpen(true);
+      },
+    },
+    {
+      keys: new Set(["control", "."]),
+      action: (event: KeyboardEvent, setIsModalOpen: Function) => {
+        event.preventDefault();
+        setIsModalOpen(false);
+      },
+    },
+    {
+      keys: new Set(["control", "shift", "r"]),
+      action: (event: KeyboardEvent, setIsSliderOpen: Function) => {
+        event.preventDefault();
+        setIsSliderOpen(false);
+      },
+    },
+    {
+      keys: new Set(["control", "shift", "t"]),
+      action: (event: KeyboardEvent, onAddTab: Function) => {
+        event.preventDefault();
+        onAddTab();
+      },
+    },
+    {
+      keys: new Set(["control", "escape"]),
+      action: (event: KeyboardEvent, activeTabId: string, onTabRemove: Function) => {
+        event.preventDefault();
+        onTabRemove(activeTabId);
+      },
+    },
+  ];
+
+  
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {

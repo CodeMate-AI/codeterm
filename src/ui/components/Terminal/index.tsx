@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import {
   FiAlertTriangle,
@@ -25,6 +25,7 @@ import { useTabs } from "../../hooks/useTab";
 import { parseDirectoryListing } from "../../utils/fileSystem";
 import CircularLoader from "../../utils/circularLoader";
 import HtopTerminal from "../HtopTerminal";
+import { shortcutContext } from "../../context/shortCutContext";
 
 // Creating an instance of the Convert class
 const convert = new Convert();
@@ -66,6 +67,8 @@ export const Terminal: React.FC<TerminalProps> = ({
 }) => {
   // Destructure the useTabs hook to get and set the sudo password
   const { setSudoPasswordTab, getIsSudoPassword, getSudoPassword } = useTabs();
+
+  const {registerListener, removeListener} = useContext(shortcutContext)
 
   // Define references for various DOM elements
   const inputRef = useRef<HTMLInputElement>(null);
@@ -158,17 +161,21 @@ export const Terminal: React.FC<TerminalProps> = ({
 
   // Add event listener for Ctrl+I keypress to toggle agenting mode
   useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.ctrlKey && event.key === "i") {
-        event.preventDefault();
-        toggleMode();
-      }
+    const keys = new Set(["control", "i"]); // Define the shortcut (Ctrl + i)
+
+    // Define the action for this shortcut
+    const handleToggleMode = () => {
+      toggleMode(); // Call the toggleMode function
     };
-    document.addEventListener("keydown", handleKeyPress);
+
+    // Register the shortcut with registerListener
+    registerListener(keys, handleToggleMode);
+
+    // Cleanup: Remove the listener when the component unmounts
     return () => {
-      document.removeEventListener("keydown", handleKeyPress);
+      removeListener(keys);
     };
-  }, []);
+  }, [registerListener, removeListener]);
 
   // Toggle the prompt mode
   const toggleMode = () => {
@@ -181,18 +188,22 @@ export const Terminal: React.FC<TerminalProps> = ({
 
   // Add event listener for Ctrl+Shift+Alt keypress to focus input
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.altKey) {
-        inputRef.current?.focus();
-      }
+    // Define the keys for the shortcut (Ctrl + Shift + Alt)
+    const keys = new Set(["control", "shift", "alt"]);
+
+    // Define the action for this shortcut
+    const handleFocusInput = () => {
+      inputRef.current?.focus(); // Focus the input element
     };
 
-    window.addEventListener("keydown", handleKeyPress);
+    // Register the listener with registerListener
+    registerListener(keys, handleFocusInput);
 
+    // Cleanup: Remove the listener when the component unmounts
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      removeListener(keys);
     };
-  }, []);
+  }, [registerListener, removeListener]);
 
   // Clear suggestion when input changes
   useEffect(() => {
@@ -565,7 +576,9 @@ export const Terminal: React.FC<TerminalProps> = ({
         timestamp: item.timestamp,
         current_cmd: item.inputCmd,
         fileSystem:
-          item.inputCmd.startsWith("dir") || item.inputCmd.startsWith("ls")
+          item.inputCmd.startsWith("dir") || 
+          // item.inputCmd.startsWith("ls")
+          item.inputCmd === "ls" || item.inputCmd === "ls -l"
             ? parseDirectoryListing(item.output, platform)
             : undefined,
         isStreaming: false,
@@ -948,7 +961,8 @@ export const Terminal: React.FC<TerminalProps> = ({
         setIsAiThinking(false);
         const fileSystem =
           data.current_cmd.startsWith("dir") ||
-            data.current_cmd.startsWith("ls")
+            // data.current_cmd.startsWith("ls")
+            data.current_cmd === "ls" || data.current_cmd === "ls -l"
             ? parseDirectoryListing(data.output, platform)
             : undefined;
 
@@ -1053,7 +1067,8 @@ export const Terminal: React.FC<TerminalProps> = ({
         setIsLoading(false);
         const fileSystem =
           data.current_cmd.startsWith("dir") ||
-            data.current_cmd.startsWith("ls")
+            // data.current_cmd.startsWith("ls")
+            data.current_cmd === "ls" || data.current_cmd === "ls -l"
             ? parseDirectoryListing(streamingContent, platform)
             : undefined;
 

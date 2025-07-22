@@ -20,7 +20,7 @@ const shortcuts: ShortcutItemProps[] = [
   { command: "Close Current Plane", shortcut: ["Ctrl", "Shift", "B"] },
   { command: "Open File Menu", shortcut: ["Ctrl", "Shift", "O"] },
   { command: "Change to terminal", shortcut: ["Ctrl", "Shift", "C"] },
-  { command: "Change to AI", shortcut: ["Ctrl", "Shift", "I"] },
+  { command: "Change to AI", shortcut: ["Ctrl", "Shift", "A"] },
   { command: "Attach message to context", shortcut: ["Double-click"] },
 ];
 

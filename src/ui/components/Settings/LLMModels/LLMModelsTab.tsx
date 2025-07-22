@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import modelData from "../../../models/models.json";
 import { Socket } from "socket.io-client";
 import { LLMCurrentModel, LLMModel } from "../../../types/models";
 import CurrentModelDetails from "./CurrentModelDetails";
 import { User } from "../../../types/user";
+import { shortcutContext } from "../../../context/shortCutContext";
 
 const providerParams: { [key: string]: string[] } = {
   openai: ["apiKey"],
@@ -121,6 +122,10 @@ export function Toggle({
 
 
 export default function LLMModelTab({ socket, isConnected }: LLMModelProps) {
+
+  const {registerListener, removeListener} = useContext(shortcutContext) 
+
+
   const [selectedProvider, setSelectedProvider] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<LLMModel | null>(null);
   const [params, setParams] = useState<{ [key: string]: string }>({});
@@ -318,22 +323,26 @@ export default function LLMModelTab({ socket, isConnected }: LLMModelProps) {
       ]
       : models.filter((model) => model.provider === selectedProvider);
 
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === ".") {
-        setSelectedProvider("");
-        setSelectedModel(null);
-        setParams({});
-        setSuccessMessage("");
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
+      useEffect(() => {
+        // Define the keys for the shortcut (Ctrl + .)
+        const keys = new Set(["control", "."]);
+    
+        // Define the action for this shortcut
+        const handleClearValues = () => {
+          setSelectedProvider("");
+          setSelectedModel(null);
+          setParams({});
+          setSuccessMessage("");
+        };
+    
+        // Register the listener with registerListener
+        registerListener(keys, handleClearValues);
+    
+        // Cleanup: Remove the listener when the component unmounts
+        return () => {
+          removeListener(keys);
+        };
+      }, [registerListener, removeListener, setSelectedProvider, setSelectedModel, setParams, setSuccessMessage]);
 
 
 

@@ -4,6 +4,7 @@ import NavHead from "./components/NavHead";
 import { useTabs } from "./hooks/useTab";
 import { useSocket } from "./hooks/useSocket";
 import AdvancedSplitScreen from "./common/SplitScreen";
+import { ActiveSplitScreenProvider } from "./context/activeSplitScreenId";
 
 // Define the structure of a code block
 interface CodeBlock {
@@ -90,6 +91,7 @@ function App() {
 
 
   return (
+    
     <div
       className={`flex flex-col min-h-screen z-0 relative bg-opacity-50 bg-gradient-to-b from-[--bgGradientStart] to-[--bgGradientEnd] ${isSliderOpen
           ? "pr-80 transition-[padding-right]"

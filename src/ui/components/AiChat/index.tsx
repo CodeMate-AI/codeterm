@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import {
   FiMessageCircle,
@@ -16,6 +16,7 @@ import {
   StreamingMessage,
 } from "../../types/terminalTypes";
 import { useTabs } from "../../hooks/useTab";
+import { shortcutContext } from "../../context/shortCutContext";
 
 // Define the Electron API interface for type safety
 interface ElectronAPI {
@@ -79,6 +80,8 @@ export const AiChat: React.FC<AiChatProps> = ({
   // Custom hook for managing tabs
   const { tabs, updateStreamingContent, clearStreamingContent } = useTabs();
 
+  const {registerListener, removeListener} = useContext(shortcutContext)
+
   // Handle showing code preview
   const handleShowCodePreview = async (codeBlocks: CodeBlock[]) => {
     onShowPreview(codeBlocks);
@@ -86,18 +89,19 @@ export const AiChat: React.FC<AiChatProps> = ({
 
   // Add keypress listener for focusing the input
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.altKey) {
-        inputRef.current?.focus();
-      }
+    const keys = new Set(["control", "shift", "alt"]);
+  
+    const handleKeyPress = () => {
+      inputRef.current?.focus();
     };
-
-    window.addEventListener("keydown", handleKeyPress);
-
+  
+    registerListener(keys, handleKeyPress);
+  
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      removeListener(keys);
     };
-  }, []);
+  }, [registerListener, removeListener]);
+  
 
   // Add a new message to the chat
   const addMessage = useCallback(
