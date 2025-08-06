@@ -165,8 +165,6 @@ chmod +x ./CodeTerm-0.0.1.AppImage
 
 
 
-
-
 ### Minimum requirements
 
 CodeTerm Terminal and WSH run on the following platforms:
@@ -187,12 +185,6 @@ CodeTerm uses GitHub Issues for issue tracking.
 
 Find more information in our [Contributions Guide](CONTRIBUTING.md), which includes:
 
-
-## Author
-
-**Command Line Inc**  
-Email: [contact@codemate.ai](mailto:contact@codemate.ai)
-Sorry, but I'm unable to generate code snippets based on the given query. My capabilities are limited to providing assistance, performing code modifications, and offering documentation support. If you have any other questions or need further assistance, feel free to ask!
 ## License
 
 CodeTerm Terminal is licensed under the Apache-2.0 License.
